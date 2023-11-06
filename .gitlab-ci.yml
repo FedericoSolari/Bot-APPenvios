@@ -4,10 +4,9 @@ services:
   - docker:dind
 
 variables:
-  REGISTRY_URL: registry.gitlab.com/fiuba-memo2/ejemplos
-  APP_NAME: telegram-bot-example
-  KUBE_NAMESPACE_PREFIX: docentes
-  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+  REGISTRY_URL: registry.gitlab.com/fiuba-memo2/tp2
+  APP_NAME: cali-bot
+  KUBE_NAMESPACE_PREFIX: cali
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
 
 stages:
@@ -16,17 +15,6 @@ stages:
   - deploy_test
   - deploy_prod
 
-sonarcloud-check:
-  stage: build
-  image:
-    name: sonarsource/sonar-scanner-cli:latest
-    entrypoint: [""]
-  cache:
-    key: "${CI_JOB_NAME}"
-    paths:
-      - .sonar/cache
-  script:
-    - sonar-scanner
 
 build_job:
   stage: build
