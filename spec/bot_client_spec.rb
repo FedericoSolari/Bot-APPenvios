@@ -183,4 +183,14 @@ describe 'BotClient' do
 
     app.run_once
   end
+
+  xit 'Deberia ver un mensaje de error al intentar registrarse sin codigo postal' do
+    cuando_registro_usario('Juan', 'Av Las Heras 1232', nil)
+    when_i_send_text('fake_token', '/registrar Juan, Av Las Heras 1232, ')
+    then_i_get_text('fake_token', 'Verifique que se hayan ingresado todos los parametros (nombre, direccion, codigo postal)')
+
+    app = BotClient.new('fake_token')
+
+    app.run_once
+  end
 end
