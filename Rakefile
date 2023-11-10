@@ -19,6 +19,20 @@ RuboCop::RakeTask.new(:rubocop) do |task|
   task.requires << 'rubocop-rspec'
 end
 
+require 'cucumber/rake/task'
+Cucumber::Rake::Task.new(:cucumber) do |task|
+  task.cucumber_opts = ['features', '--publish-quiet', '--tags \'not @wip\'']
+end
+
+Cucumber::Rake::Task.new(:acceptance_report) do |task|
+  task.cucumber_opts = ['features', '--publish-quiet', '--tags \'not @wip and not @local\'', '--format pretty',
+                        '--format html -o reports/cucumber.html']
+end
+
+Cucumber::Rake::Task.new(:feature_indev) do |task|
+  task.cucumber_opts = ['features', '--tags \'@indev\'']
+end
+
 task build_server: %i[rubocop spec_report]
 
-task default: %i[spec rubocop]
+task default: %i[cucumber spec rubocop]
