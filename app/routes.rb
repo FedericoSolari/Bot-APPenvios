@@ -15,7 +15,8 @@ class Routes
 
   on_message_pattern %r{/registrar (?<nombre>.*), (?<direccion>.*), (?<codigo_postal>.*)} do |bot, message, args|
     direccion = args['direccion']
-    if direccion.nil? || direccion.empty?
+    codigo_postal = args['codigo_postal']
+    if direccion.nil? || direccion.empty? || codigo_postal.nil? || codigo_postal.empty?
       bot.api.send_message(chat_id: message.chat.id, text: 'Verifique que se hayan ingresado todos los parametros (nombre, direccion, codigo postal)')
     else
       bot.api.send_message(chat_id: message.chat.id, text: "Bienvenid@ #{args['nombre']}")
