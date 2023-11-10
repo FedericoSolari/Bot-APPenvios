@@ -45,6 +45,17 @@ def when_i_send_keyboard_updates(token, message_text, inline_selection)
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
+def cuando_registro_usario(nombre, direccion, codigo_postal)
+  body = {
+    "nombre": nombre,
+    "direccion": direccion,
+    "codigo_postal": codigo_postal
+  }
+
+  stub_request(:any, "https://api.9521.com.ar/cali-test/registrar")
+    .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
+end
+
 def then_i_get_text(token, message_text)
   body = { "ok": true,
            "result": { "message_id": 12,
@@ -147,6 +158,18 @@ describe 'BotClient' do
 
     when_i_send_text(token, '/unknown')
     then_i_get_text(token, 'Uh? No te entiendo! Me repetis la pregunta?')
+
+    app = BotClient.new(token)
+
+    app.run_once
+  end
+
+  xit 'Deberia ver un mensaje de bienvenida al registrarse' do
+    token = 'fake_token'
+
+    cuando_registro_usario('Juan', 'Av Las Heras 1232', '1425')
+    when_i_send_text(token, '/registrar Juan, Av Las Heras 1232, CP: 1425')
+    then_i_get_text(token, 'Bienvenid@ Juan')
 
     app = BotClient.new(token)
 
