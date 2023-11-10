@@ -52,7 +52,7 @@ def cuando_registro_usario(nombre, direccion, codigo_postal)
     "codigo_postal": codigo_postal
   }
 
-  stub_request(:any, "https://api.9521.com.ar/cali-test/registrar")
+  stub_request(:any, 'https://api.9521.com.ar/cali-test/registrar')
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
@@ -165,13 +165,11 @@ describe 'BotClient' do
   end
 
   xit 'Deberia ver un mensaje de bienvenida al registrarse' do
-    token = 'fake_token'
-
     cuando_registro_usario('Juan', 'Av Las Heras 1232', '1425')
-    when_i_send_text(token, '/registrar Juan, Av Las Heras 1232, CP: 1425')
-    then_i_get_text(token, 'Bienvenid@ Juan')
+    when_i_send_text('fake_token', '/registrar Juan, Av Las Heras 1232, CP: 1425')
+    then_i_get_text('fake_token', 'Bienvenid@ Juan')
 
-    app = BotClient.new(token)
+    app = BotClient.new('fake_token')
 
     app.run_once
   end
