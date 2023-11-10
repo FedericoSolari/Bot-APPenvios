@@ -164,7 +164,7 @@ describe 'BotClient' do
     app.run_once
   end
 
-  xit 'Deberia ver un mensaje de bienvenida al registrarse' do
+  it 'Deberia ver un mensaje de bienvenida al registrarse' do
     cuando_registro_usario('Juan', 'Av Las Heras 1232', '1425')
     when_i_send_text('fake_token', '/registrar Juan, Av Las Heras 1232, CP: 1425')
     then_i_get_text('fake_token', 'Bienvenid@ Juan')

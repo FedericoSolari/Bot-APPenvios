@@ -13,6 +13,10 @@ class Routes
     bot.api.send_message(chat_id: message.chat.id, text: "Hola, #{args['name']}")
   end
 
+  on_message_pattern %r{/registrar (?<nombre>.*), (?<direccion>.*), (?<codigo_postal>.*)} do |bot, message, args|
+    bot.api.send_message(chat_id: message.chat.id, text: "Bienvenid@ #{args['nombre']}")
+  end
+
   on_message '/stop' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: "Chau, #{message.from.username}")
   end
