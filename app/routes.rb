@@ -1,6 +1,7 @@
 require "#{File.dirname(__FILE__)}/../lib/routing"
 require "#{File.dirname(__FILE__)}/../lib/version"
 require "#{File.dirname(__FILE__)}/tv/series"
+require_relative '../conectores/conector_api'
 
 class Routes
   include Routing
@@ -14,12 +15,15 @@ class Routes
   end
 
   on_message_pattern %r{/registrar (?<nombre>.*), (?<direccion>.*), (?<codigo_postal>.*)} do |bot, message, args|
+    nombre = args['nombre']
     direccion = args['direccion']
     codigo_postal = args['codigo_postal']
     if direccion.nil? || direccion.empty? || codigo_postal.nil? || codigo_postal.empty?
       bot.api.send_message(chat_id: message.chat.id, text: 'Verifique que se hayan ingresado todos los parametros (nombre, direccion, codigo postal)')
     else
-      bot.api.send_message(chat_id: message.chat.id, text: "Bienvenid@ #{args['nombre']}")
+      conector_api = ConectorApi.new(ENV['API_URL'])
+      texto = conector_api.registrar_cliente(nombre, direccion, codigo_postal)
+      bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
     end
   end
 

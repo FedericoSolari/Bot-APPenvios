@@ -45,12 +45,12 @@ def when_i_send_keyboard_updates(token, message_text, inline_selection)
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
-def cuando_registro_usario(nombre, direccion, codigo_postal)
-  body = {
-    "nombre": nombre,
-    "direccion": direccion,
-    "codigo_postal": codigo_postal
-  }
+def cuando_registro_usario(nombre, _direccion, _codigo_postal)
+  body = { "text": "Bienvenid@ #{nombre}" }
+  # "nombre": nombre,
+  # "direccion": direccion,
+  # "codigo_postal": codigo_postal
+  # }
 
   stub_request(:any, "#{ENV['API_URL']}/registrar")
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
