@@ -12,6 +12,7 @@ services:
         - .:/app
     environment:
         ENV: "development"
+        API_URL: "http://web:3000"
 
 networks:
   default:

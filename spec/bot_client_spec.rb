@@ -52,7 +52,7 @@ def cuando_registro_usario(nombre, direccion, codigo_postal)
     "codigo_postal": codigo_postal
   }
 
-  stub_request(:any, 'https://api.9521.com.ar/cali-test/registrar')
+  stub_request(:any, "#{ENV['API_URL']}/registrar")
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
