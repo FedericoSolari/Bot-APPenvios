@@ -1,9 +1,16 @@
 require 'faraday'
 require_relative '../excepciones/conexion_api_error'
 
+RUTA_API_TEST = 'http://web:3000'.freeze
+
 class ConectorApi
-  def initialize(api_url)
-    @api_url = api_url
+  def initialize
+    @api_url = case ENV['ENTORNO']
+               when 'entorno-test'
+                RUTA_API_TEST
+               else
+                RUTA_API_TEST
+               end
   end
 
   def registrar_cliente(nombre, direccion, codigo_postal)

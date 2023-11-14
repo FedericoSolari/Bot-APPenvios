@@ -21,7 +21,7 @@ class Routes
     if direccion.nil? || direccion.empty? || codigo_postal.nil? || codigo_postal.empty?
       bot.api.send_message(chat_id: message.chat.id, text: 'Verifique que se hayan ingresado todos los parametros (nombre, direccion, codigo postal)')
     else
-      conector_api = ConectorApi.new(ENV['API_URL'])
+      conector_api = ConectorApi.new
       texto = conector_api.registrar_cliente(nombre, direccion, codigo_postal)
       bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
     end
