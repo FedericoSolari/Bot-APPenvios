@@ -209,4 +209,14 @@ describe 'BotClient' do
 
     app.run_once
   end
+
+  xit 'Deberia ver un mensaje de error al intentar registrarse un cadete sin nombre' do
+    cuando_registro_cadete(nil, 'moto')
+    when_i_send_text('fake_token', '/registrar-cadete , moto')
+    then_i_get_text('fake_token', 'Verifique que se hayan ingresado todos los parametros (nombre, vehiculo)')
+
+    app = BotClient.new('fake_token')
+
+    app.run_once
+  end
 end
