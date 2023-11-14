@@ -26,6 +26,16 @@ class ConectorApi
     end
   end
 
+  def registrar_cadete(nombre, vehiculo)
+    cuerpo_solicitud = { nombre:, vehiculo: }.to_json
+    begin
+      respuesta_http = Faraday.post("#{@api_url}/registrar_cadete", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
+      parseador_respuesta(respuesta_http)
+    rescue Faraday::Error
+      raise ConexionApiError
+    end
+  end
+
   private
 
   def parseador_respuesta(respuesta_http)

@@ -33,7 +33,9 @@ class Routes
     if nombre.nil? || nombre.empty? || vehiculo.nil? || vehiculo.empty?
       bot.api.send_message(chat_id: message.chat.id, text: 'Verifique que se hayan ingresado todos los parametros (nombre, vehiculo)')
     else
-      bot.api.send_message(chat_id: message.chat.id, text: "Bienvenid@ a la flota #{args['nombre']}")
+      conector_api = ConectorApi.new
+      texto = conector_api.registrar_cadete(nombre, vehiculo)
+      bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
     end
   end
 
