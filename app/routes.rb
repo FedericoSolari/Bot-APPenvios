@@ -27,6 +27,10 @@ class Routes
     end
   end
 
+  on_message_pattern %r{/registrar-cadete (?<nombre>.*), (?<vehiculo>.*)} do |bot, message, args|
+    bot.api.send_message(chat_id: message.chat.id, text: "Bienvenid@ a la flota #{args['nombre']}")
+  end
+
   on_message '/stop' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: "Chau, #{message.from.username}")
   end
