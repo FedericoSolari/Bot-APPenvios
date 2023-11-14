@@ -52,6 +52,16 @@ def cuando_registro_usario(nombre, _direccion, _codigo_postal)
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
+def cuando_registro_cadete(nombre, _vehiculo)
+  body = { "text": "Bienvenid@ a la flota #{nombre}" }
+
+  stub_request(:any, 'http://web:3000/registrar_cadete')
+    .with(
+      body: { 'nombre' => nombre, 'vehiculo' => vehiculo }
+    )
+    .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
+end
+
 def then_i_get_text(token, message_text)
   body = { "ok": true,
            "result": { "message_id": 12,
@@ -184,6 +194,16 @@ describe 'BotClient' do
     cuando_registro_usario('Juan', 'Av Las Heras 1232', nil)
     when_i_send_text('fake_token', '/registrar Juan, Av Las Heras 1232, ')
     then_i_get_text('fake_token', 'Verifique que se hayan ingresado todos los parametros (nombre, direccion, codigo postal)')
+
+    app = BotClient.new('fake_token')
+
+    app.run_once
+  end
+
+  xit 'Deberia ver un mensaje de bienvenida al registrarse un nuevo cadete' do
+    cuando_registro_cadete('Pedro', 'moto')
+    when_i_send_text('fake_token', '/registrar-cadete Pedro, moto')
+    then_i_get_text('fake_token', 'Bienvenid@ a la flota Pedro')
 
     app = BotClient.new('fake_token')
 
