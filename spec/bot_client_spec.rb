@@ -47,12 +47,8 @@ end
 
 def cuando_registro_usario(nombre, _direccion, _codigo_postal)
   body = { "text": "Bienvenid@ #{nombre}" }
-  # "nombre": nombre,
-  # "direccion": direccion,
-  # "codigo_postal": codigo_postal
-  # }
 
-  stub_request(:any, "#{ENV['API_URL']}/registrar")
+  stub_request(:any, 'http://web:3000/registrar')
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
