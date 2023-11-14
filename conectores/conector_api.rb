@@ -2,14 +2,17 @@ require 'faraday'
 require_relative '../excepciones/conexion_api_error'
 
 RUTA_API_TEST = 'http://web:3000'.freeze
+RUTA_API = 'http://restapi:8080'.freeze # Ver el archivo "service.yaml" de la api
 
 class ConectorApi
   def initialize
-    @api_url = case ENV['ENTORNO']
-               when 'entorno-test'
-                RUTA_API_TEST
+    @api_url = case ENV['ENV']
+               when 'test'
+                 RUTA_API_TEST
+               when 'development'
+                 RUTA_API_TEST
                else
-                RUTA_API_TEST
+                 RUTA_API
                end
   end
 
