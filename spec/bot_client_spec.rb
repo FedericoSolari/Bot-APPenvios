@@ -65,6 +65,18 @@ def cuando_registro_cadete(nombre, vehiculo, id_cadete)
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
+def cuando_solicito_asignacion_de_envio(id_cadete)
+  body = { "text": 'Te asignamos el siguiente envio con ID 1',
+           "origen": 'Av Las Heras 1232, CP: 1425',
+           "destino": 'Cerrito 628, CP: 1010' }
+
+  stub_request(:any, 'http://web:3000/envios/asignar')
+    .with(
+      body: { 'id_cadete' => id_cadete }
+    )
+    .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
+end
+
 def cuando_realizo_envio(direccion, codigo_postal, id_cliente)
   body = { "text": 'Se registró tu envio con el ID: 8' }
 
@@ -257,6 +269,16 @@ describe 'BotClient' do
     cuando_realizo_envio(nil, 'CP:1010', 141_733_544)
     when_i_send_text('fake_token', '/nuevo-envio , CP:1010')
     then_i_get_text('fake_token', 'Verifique que se hayan ingresado todos los parametros (direccion, codigo postal)')
+
+    app = BotClient.new('fake_token')
+
+    app.run_once
+  end
+
+  xit 'Deberia ver un mensaje de asignacion exitosa al solicitar asignacion' do
+    cuando_solicito_asignacion_de_envio(141_733_544)
+    when_i_send_text('fake_token', '/asignar-envio')
+    then_i_get_text('fake_token', 'Te asignamos el siguiente envio con ID 1. Retirar el envio en Av Las Heras 1232, CP: 1425. Entregar el envio en Cerrito 628, CP: 1010')
 
     app = BotClient.new('fake_token')
 
