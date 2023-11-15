@@ -22,7 +22,7 @@ class Routes
       bot.api.send_message(chat_id: message.chat.id, text: 'Verifique que se hayan ingresado todos los parametros (nombre, direccion, codigo postal)')
     else
       conector_api = ConectorApi.new
-      texto = conector_api.registrar_cliente(nombre, direccion, codigo_postal)
+      texto = conector_api.registrar_cliente(nombre, direccion, codigo_postal, message.chat.id)
       bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
     end
   end

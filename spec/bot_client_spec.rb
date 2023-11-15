@@ -45,10 +45,13 @@ def when_i_send_keyboard_updates(token, message_text, inline_selection)
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
-def cuando_registro_cliente(nombre, _direccion, _codigo_postal)
+def cuando_registro_cliente(nombre, direccion, codigo_postal, id_cliente)
   body = { "text": "Bienvenid@ #{nombre}" }
 
   stub_request(:any, 'http://web:3000/registrar')
+    .with(
+      body: { 'nombre' => nombre, 'direccion' => direccion, 'codigo_postal' => codigo_postal, 'id_cliente' => id_cliente }
+    )
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
@@ -171,7 +174,7 @@ describe 'BotClient' do
   end
 
   it 'Deberia ver un mensaje de bienvenida al registrarse' do
-    cuando_registro_cliente('Juan', 'Av Las Heras 1232', '1425')
+    cuando_registro_cliente('Juan', 'Av Las Heras 1232', 'CP: 1425', 141_733_544)
     when_i_send_text('fake_token', '/registrar Juan, Av Las Heras 1232, CP: 1425')
     then_i_get_text('fake_token', 'Bienvenid@ Juan')
 
@@ -181,7 +184,7 @@ describe 'BotClient' do
   end
 
   it 'Deberia ver un mensaje de error al intentar registrarse sin direccion' do
-    cuando_registro_cliente('Juan', nil, '1425')
+    cuando_registro_cliente('Juan', nil, 'CP: 1425', 141_733_544)
     when_i_send_text('fake_token', '/registrar Juan, , CP: 1425')
     then_i_get_text('fake_token', 'Verifique que se hayan ingresado todos los parametros (nombre, direccion, codigo postal)')
 
@@ -191,7 +194,7 @@ describe 'BotClient' do
   end
 
   it 'Deberia ver un mensaje de error al intentar registrarse sin codigo postal' do
-    cuando_registro_cliente('Juan', 'Av Las Heras 1232', nil)
+    cuando_registro_cliente('Juan', 'Av Las Heras 1232', nil, 141_733_544)
     when_i_send_text('fake_token', '/registrar Juan, Av Las Heras 1232, ')
     then_i_get_text('fake_token', 'Verifique que se hayan ingresado todos los parametros (nombre, direccion, codigo postal)')
 

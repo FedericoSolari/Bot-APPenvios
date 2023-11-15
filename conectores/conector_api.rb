@@ -16,8 +16,8 @@ class ConectorApi
                end
   end
 
-  def registrar_cliente(nombre, direccion, codigo_postal)
-    cuerpo_solicitud = { nombre:, direccion:, codigo_postal: }.to_json
+  def registrar_cliente(nombre, direccion, codigo_postal, id_cliente)
+    cuerpo_solicitud = { nombre:, direccion:, codigo_postal:, id_cliente: }.to_json
     begin
       respuesta_http = Faraday.post("#{@api_url}/registrar", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
       parseador_respuesta(respuesta_http)
