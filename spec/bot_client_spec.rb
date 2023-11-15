@@ -60,7 +60,7 @@ def cuando_registro_cadete(nombre, vehiculo, id_cadete)
 
   stub_request(:any, 'http://web:3000/registrar_cadete')
     .with(
-      body: { 'nombre' => nombre, 'vehiculo' => vehiculo, "id_cliente" => id_cliente }
+      body: { 'nombre' => nombre, 'vehiculo' => vehiculo, 'id_cadete' => id_cadete }
     )
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
