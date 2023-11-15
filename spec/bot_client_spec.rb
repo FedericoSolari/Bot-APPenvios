@@ -55,12 +55,12 @@ def cuando_registro_cliente(nombre, direccion, codigo_postal, id_cliente)
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
-def cuando_registro_cadete(nombre, vehiculo)
+def cuando_registro_cadete(nombre, vehiculo, id_cadete)
   body = { "text": "Bienvenid@ a la flota #{nombre}" }
 
   stub_request(:any, 'http://web:3000/registrar_cadete')
     .with(
-      body: { 'nombre' => nombre, 'vehiculo' => vehiculo }
+      body: { 'nombre' => nombre, 'vehiculo' => vehiculo, "id_cliente" => id_cliente }
     )
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
@@ -204,7 +204,7 @@ describe 'BotClient' do
   end
 
   it 'Deberia ver un mensaje de bienvenida al registrarse un nuevo cadete' do
-    cuando_registro_cadete('Pedro', 'moto')
+    cuando_registro_cadete('Pedro', 'moto', 141_733_544)
     when_i_send_text('fake_token', '/registrar-cadete Pedro, moto')
     then_i_get_text('fake_token', 'Bienvenid@ a la flota Pedro')
 
@@ -214,7 +214,7 @@ describe 'BotClient' do
   end
 
   it 'Deberia ver un mensaje de error al intentar registrarse un cadete sin nombre' do
-    cuando_registro_cadete(nil, 'moto')
+    cuando_registro_cadete(nil, 'moto', 141_733_544)
     when_i_send_text('fake_token', '/registrar-cadete , moto')
     then_i_get_text('fake_token', 'Verifique que se hayan ingresado todos los parametros (nombre, vehiculo)')
 
@@ -224,7 +224,7 @@ describe 'BotClient' do
   end
 
   it 'Deberia ver un mensaje de error al intentar registrarse un cadete sin vehiculo' do
-    cuando_registro_cadete('Pedro', nil)
+    cuando_registro_cadete('Pedro', nil, 141_733_544)
     when_i_send_text('fake_token', '/registrar-cadete Pedro, ')
     then_i_get_text('fake_token', 'Verifique que se hayan ingresado todos los parametros (nombre, vehiculo)')
 
