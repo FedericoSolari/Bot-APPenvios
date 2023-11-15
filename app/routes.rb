@@ -51,6 +51,12 @@ class Routes
     end
   end
 
+  on_message '/asignar-envio' do |bot, message|
+    conector_api = ConectorApi.new
+    texto = conector_api.asignar_envio(message.chat.id)
+    bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
+  end
+
   on_message '/stop' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: "Chau, #{message.from.username}")
   end

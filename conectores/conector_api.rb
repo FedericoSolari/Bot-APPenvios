@@ -46,6 +46,16 @@ class ConectorApi
     end
   end
 
+  def asignar_envio(id_cadete)
+    cuerpo_solicitud = { id_cadete: }.to_json
+    begin
+      respuesta_http = Faraday.put("#{@api_url}/envios/asignar", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
+      parseador_respuesta(respuesta_http)
+    rescue Faraday::Error
+      raise ConexionApiError
+    end
+  end
+
   private
 
   def parseador_respuesta(respuesta_http)
