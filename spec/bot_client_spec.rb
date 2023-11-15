@@ -253,7 +253,7 @@ describe 'BotClient' do
     app.run_once
   end
 
-  xit 'Deberia ver un mensaje de error intentar al crear un nuevo envio sin direccion' do
+  it 'Deberia ver un mensaje de error intentar al crear un nuevo envio sin direccion' do
     cuando_realizo_envio(nil, 'CP:1010', 141_733_544)
     when_i_send_text('fake_token', '/nuevo-envio , CP:1010')
     then_i_get_text('fake_token', 'Verifique que se hayan ingresado todos los parametros (direccion, codigo postal)')
