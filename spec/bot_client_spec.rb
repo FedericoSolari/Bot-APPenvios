@@ -90,7 +90,7 @@ def cuando_solicito_estado_de_envio_sin_asignar(id_envio)
 
   stub_request(:get, "http://web:3000/envios/#{id_envio}")
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
-  end
+end
 
 def cuando_solicito_estado_de_envio_asignado(id_envio)
   body = { "text": "Tu envio (ID: #{id_envio}) se encuentra en proceso de entrega" }
@@ -297,7 +297,8 @@ describe 'BotClient' do
     app.run_once
   end
 
-  xit 'Deberia ver un mensaje de pendiente de asignacion del envio cuando no tiene un cadete asignado' do
+  # rubocop:disable RSpec/ExampleLength
+  it 'Deberia ver un mensaje de pendiente de asignacion del envio cuando no tiene un cadete asignado' do
     cuando_realizo_envio('Cerrito 628', 'CP:1010', 141_733_544)
     cuando_solicito_estado_de_envio_sin_asignar(8)
     when_i_send_text('fake_token', '/estado-envio 8')
@@ -306,9 +307,9 @@ describe 'BotClient' do
     app = BotClient.new('fake_token')
 
     app.run_once
-    end
+  end
 
-  xit 'Deberia ver un mensaje de envio en proceso cuando el envio esta asignado' do
+  it 'Deberia ver un mensaje de envio en proceso cuando el envio esta asignado' do
     cuando_realizo_envio('Cerrito 628', 'CP:1010', 141_733_544)
     cuando_solicito_asignacion_de_envio(141_733_544)
     cuando_solicito_estado_de_envio_asignado(8)
@@ -319,4 +320,5 @@ describe 'BotClient' do
 
     app.run_once
   end
+  # rubocop:enable RSpec/ExampleLength
 end

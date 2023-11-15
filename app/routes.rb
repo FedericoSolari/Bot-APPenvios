@@ -51,6 +51,18 @@ class Routes
     end
   end
 
+  on_message_pattern %r{/estado-envio (?<id_envio>.*)} do |bot, message, args|
+    id_envio = args['id_envio']
+
+    if id_envio.nil? || id_envio.empty?
+      bot.api.send_message(chat_id: message.chat.id, text: 'Verifique que se haya ingresado el id de envio')
+    else
+      conector_api = ConectorApi.new
+      texto = conector_api.estado_envio(id_envio)
+      bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
+    end
+  end
+
   on_message '/asignar-envio' do |bot, message|
     conector_api = ConectorApi.new
     texto = conector_api.asignar_envio(message.chat.id)

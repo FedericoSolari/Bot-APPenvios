@@ -56,6 +56,13 @@ class ConectorApi
     end
   end
 
+  def estado_envio(id_envio)
+    respuesta_http = Faraday.get("#{@api_url}/envios/#{id_envio}")
+    parseador_respuesta(respuesta_http)
+  rescue Faraday::Error
+    raise ConexionApiError
+  end
+
   private
 
   def parseador_respuesta(respuesta_http)
