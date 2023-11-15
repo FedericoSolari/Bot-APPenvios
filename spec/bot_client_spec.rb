@@ -243,7 +243,7 @@ describe 'BotClient' do
     app.run_once
   end
 
-  xit 'Deberia ver un mensaje de creacion de envio exitosa al crear un nuevo envio' do
+  it 'Deberia ver un mensaje de creacion de envio exitosa al crear un nuevo envio' do
     cuando_realizo_envio('Cerrito 628', 'CP:1010', 141_733_544)
     when_i_send_text('fake_token', '/nuevo-envio Cerrito 628, CP:1010')
     then_i_get_text('fake_token', 'Se registró tu envio con el ID: 8')
