@@ -65,6 +65,16 @@ def cuando_registro_cadete(nombre, vehiculo, id_cadete)
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
+def cuando_realizo_envio(direccion, codigo_postal, id_cliente)
+  body = { "text": 'Se registró tu envio con el ID: 8' }
+
+  stub_request(:post, 'http://web:3000/envios')
+    .with(
+      body: { 'direccion' => direccion, 'codigo_postal' => codigo_postal, 'id_cliente' => id_cliente }
+    )
+    .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
+end
+
 def then_i_get_text(token, message_text)
   body = { "ok": true,
            "result": { "message_id": 12,
@@ -227,6 +237,16 @@ describe 'BotClient' do
     cuando_registro_cadete('Pedro', nil, 141_733_544)
     when_i_send_text('fake_token', '/registrar-cadete Pedro, ')
     then_i_get_text('fake_token', 'Verifique que se hayan ingresado todos los parametros (nombre, vehiculo)')
+
+    app = BotClient.new('fake_token')
+
+    app.run_once
+  end
+
+  xit 'Deberia ver un mensaje de creacion de envio exitosa al crear un nuevo envio' do
+    cuando_realizo_envio('Cerrito 628', 'CP:1010', 141_733_544)
+    when_i_send_text('fake_token', '/nuevo-envio Cerrito 628, CP:1010')
+    then_i_get_text('fake_token', 'Se registró tu envio con el ID: 8')
 
     app = BotClient.new('fake_token')
 
