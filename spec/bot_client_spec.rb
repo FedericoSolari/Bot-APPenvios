@@ -85,6 +85,20 @@ def cuando_realizo_envio(direccion, codigo_postal, id_cliente)
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
+def cuando_solicito_estado_de_envio_sin_asignar(id_envio)
+  body = { "text": "Tu envio (ID: #{id_envio}) se encuentra pendiente de asignación" }
+
+  stub_request(:get, "http://web:3000/envios/#{id_envio}")
+    .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
+  end
+
+def cuando_solicito_estado_de_envio_asignado(id_envio)
+  body = { "text": "Tu envio (ID: #{id_envio}) se encuentra en proceso de entrega" }
+
+  stub_request(:get, "http://web:3000/envios/#{id_envio}")
+    .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
+end
+
 def then_i_get_text(token, message_text)
   body = { "ok": true,
            "result": { "message_id": 12,
@@ -277,6 +291,29 @@ describe 'BotClient' do
     cuando_solicito_asignacion_de_envio(141_733_544)
     when_i_send_text('fake_token', '/asignar-envio')
     then_i_get_text('fake_token', 'Te asignamos el siguiente envio con ID 1. Retirar el envio en Av Las Heras 1232, CP: 1425. Entregar el envio en Cerrito 628, CP: 1010')
+
+    app = BotClient.new('fake_token')
+
+    app.run_once
+  end
+
+  xit 'Deberia ver un mensaje de pendiente de asignacion del envio cuando no tiene un cadete asignado' do
+    cuando_realizo_envio('Cerrito 628', 'CP:1010', 141_733_544)
+    cuando_solicito_estado_de_envio_sin_asignar(8)
+    when_i_send_text('fake_token', '/estado-envio 8')
+    then_i_get_text('fake_token', 'Tu envio (ID: 8) se encuentra pendiente de asignación')
+
+    app = BotClient.new('fake_token')
+
+    app.run_once
+    end
+
+  xit 'Deberia ver un mensaje de envio en proceso cuando el envio esta asignado' do
+    cuando_realizo_envio('Cerrito 628', 'CP:1010', 141_733_544)
+    cuando_solicito_asignacion_de_envio(141_733_544)
+    cuando_solicito_estado_de_envio_asignado(8)
+    when_i_send_text('fake_token', '/estado-envio 8')
+    then_i_get_text('fake_token', 'Tu envio (ID: 8) se encuentra en proceso de entrega')
 
     app = BotClient.new('fake_token')
 
