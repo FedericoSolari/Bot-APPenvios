@@ -3,7 +3,7 @@ require_relative '../excepciones/conexion_api_error'
 
 class ConectorApi
   def initialize
-    @api_url = ENV['API_URL'] || ''
+    @api_url = ENV['API_URL'] || 'http://web:3000'
   end
 
   def registrar_cliente(nombre, direccion, codigo_postal, id_cliente)
