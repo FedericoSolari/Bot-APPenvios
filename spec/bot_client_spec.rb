@@ -99,6 +99,16 @@ def cuando_solicito_estado_de_envio_asignado(id_envio)
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
+def cuando_confirmo_entrega_de_envio(id_envio)
+  body = { "text": 'Gracias por entregar el envio!' }
+
+  stub_request(:put, "http://web:3000/envios/#{id_envio}")
+    .with(
+      body: { 'estado' => 'entregado' }
+    )
+    .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
+end
+
 def then_i_get_text(token, message_text)
   body = { "ok": true,
            "result": { "message_id": 12,
@@ -321,11 +331,11 @@ describe 'BotClient' do
     app.run_once
   end
 
-  xit 'Deberia ver un mensaje de entrega exitosa al confirmar una entrega' do
+  it 'Deberia ver un mensaje de entrega exitosa al confirmar una entrega' do
     cuando_realizo_envio('Cerrito 628', 'CP:1010', 141_733_544)
     cuando_confirmo_entrega_de_envio(8)
     when_i_send_text('fake_token', '/confirmar-entrega 8')
-    then_i_get_text('fake_token', 'Te asignamos el siguiente envio con ID 1. Retirar el envio en Av Las Heras 1232, CP: 1425. Entregar el envio en Cerrito 628, CP: 1010')
+    then_i_get_text('fake_token', 'Gracias por entregar el envio!')
 
     app = BotClient.new('fake_token')
 

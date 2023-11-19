@@ -69,6 +69,13 @@ class Routes
     bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
   end
 
+  on_message_pattern %r{/confirmar-entrega (?<id_envio>.*)} do |bot, message, args|
+    id_envio = args['id_envio']
+    conector_api = ConectorApi.new
+    texto = conector_api.confirmar_envio(id_envio)
+    bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
+  end
+
   on_message '/stop' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: "Chau, #{message.from.username}")
   end

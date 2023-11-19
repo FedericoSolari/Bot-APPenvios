@@ -53,6 +53,16 @@ class ConectorApi
     raise ConexionApiError
   end
 
+  def confirmar_envio(id_envio)
+    cuerpo_solicitud = { estado: 'entregado' }.to_json
+    begin
+      respuesta_http = Faraday.put("#{@api_url}/envios/#{id_envio}", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
+      parseador_respuesta(respuesta_http)
+    rescue Faraday::Error
+      raise ConexionApiError
+    end
+  end
+
   private
 
   def parseador_respuesta(respuesta_http)
