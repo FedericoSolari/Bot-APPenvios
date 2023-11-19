@@ -320,5 +320,16 @@ describe 'BotClient' do
 
     app.run_once
   end
+
+  xit 'Deberia ver un mensaje de entrega exitosa al confirmar una entrega' do
+    cuando_realizo_envio('Cerrito 628', 'CP:1010', 141_733_544)
+    cuando_confirmo_entrega_de_envio(8)
+    when_i_send_text('fake_token', '/confirmar-entrega 8')
+    then_i_get_text('fake_token', 'Te asignamos el siguiente envio con ID 1. Retirar el envio en Av Las Heras 1232, CP: 1425. Entregar el envio en Cerrito 628, CP: 1010')
+
+    app = BotClient.new('fake_token')
+
+    app.run_once
+  end
   # rubocop:enable RSpec/ExampleLength
 end
