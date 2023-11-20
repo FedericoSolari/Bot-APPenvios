@@ -11,4 +11,8 @@ class ValidadorEntrada
     # agregar validacion de vehiculo (bicicleta, auto, moto)
     nombre.nil? || nombre.empty? || vehiculo.nil? || vehiculo.empty?
   end
+
+  def validar_envio(direccion, codigo_postal)
+    direccion.nil? || direccion.empty? || codigo_postal.nil? || codigo_postal.empty?
+  end
 end

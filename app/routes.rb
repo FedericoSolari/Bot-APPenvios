@@ -37,15 +37,13 @@ class Routes
   end
 
   on_message_pattern %r{/nuevo-envio (?<direccion>.*), (?<codigo_postal>.*)} do |bot, message, args|
-    direccion = args['direccion']
-    codigo_postal = args['codigo_postal']
-    if direccion.nil? || direccion.empty? || codigo_postal.nil? || codigo_postal.empty?
-      bot.api.send_message(chat_id: message.chat.id, text: 'Verifique que se hayan ingresado todos los parametros (direccion, codigo postal)')
-    else
-      conector_api = ConectorApi.new
-      texto = conector_api.realizar_envio(direccion, codigo_postal, message.chat.id)
-      bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
-    end
+    conector_api = ConectorApi.new
+    texto = conector_api.realizar_envio(args['direccion'], args['codigo_postal'], message.chat.id)
+    bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
+  rescue ConexionApiError => e
+    bot.api.send_message(chat_id: message.chat.id, text: e.message)
+  rescue ParametrosInvalidosError => e
+    bot.api.send_message(chat_id: message.chat.id, text: e.message)
   end
 
   on_message_pattern %r{/estado-envio (?<id_envio>.*)} do |bot, message, args|

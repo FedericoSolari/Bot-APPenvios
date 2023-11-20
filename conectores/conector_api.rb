@@ -36,8 +36,11 @@ class ConectorApi
   end
 
   def realizar_envio(direccion, codigo_postal, id_cliente)
-    cuerpo_solicitud = { direccion:, codigo_postal:, id_cliente: }.to_json
+    parametros_invalidos = @validador.validar_envio(direccion, codigo_postal)
+    raise ParametrosInvalidosError, 'Verifique que se hayan ingresado todos los parametros (direccion, codigo postal)' if parametros_invalidos
+
     begin
+      cuerpo_solicitud = { direccion:, codigo_postal:, id_cliente: }.to_json
       respuesta_http = Faraday.post("#{@api_url}/envios", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
       parseador_respuesta(respuesta_http)
     rescue Faraday::Error
