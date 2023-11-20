@@ -23,10 +23,10 @@ class Routes
     @logger.debug "Se recibe la siguiente respuesta de registro de cliente: #{respuesta}"
     bot.api.send_message(chat_id: message.chat.id, text: respuesta['text'])
   rescue ConexionApiError => e
-    @logger.error "#{e}"
+    @logger.error "#{e.to_s}"
     bot.api.send_message(chat_id: message.chat.id, text: e.message)
   rescue ParametrosInvalidosError => e
-    @logger.error "#{e}"
+    @logger.error "#{e.to_s}"
     bot.api.send_message(chat_id: message.chat.id, text: e.message)
   end
 
