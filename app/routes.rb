@@ -47,9 +47,9 @@ class Routes
   end
 
   on_message_pattern %r{/estado-envio (?<id_envio>.*)} do |bot, message, args|
-      conector_api = ConectorApi.new
-      texto = conector_api.estado_envio(args['id_envio'])
-      bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
+    conector_api = ConectorApi.new
+    texto = conector_api.estado_envio(args['id_envio'])
+    bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
   rescue ConexionApiError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message)
   rescue ParametrosInvalidosError => e

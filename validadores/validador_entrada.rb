@@ -17,6 +17,6 @@ class ValidadorEntrada
   end
 
   def validar_id_envio(id_envio)
-    id_envio.nil? || id_envio.empty? || id_envio.negative?
+    id_envio.nil? || id_envio.empty?
   end
 end
