@@ -18,15 +18,11 @@ class Routes
 
   on_message_pattern %r{/registrar (?<nombre>.*), (?<direccion>.*), (?<codigo_postal>.*)} do |bot, message, args|
     conector_api = ConectorApi.new
-    @logger.debug "Se envian los siguientes datos para registrar cliente: #{args['nombre']}, #{args['direccion']}, #{args['codigo_postal']}, #{message.chat.id}"
     respuesta = conector_api.registrar_cliente(args['nombre'], args['direccion'], args['codigo_postal'], message.chat.id)
-    @logger.debug "Se recibe la siguiente respuesta de registro de cliente: #{respuesta}"
     bot.api.send_message(chat_id: message.chat.id, text: respuesta['text'])
   rescue ConexionApiError => e
-    @logger.error "#{e.to_s}"
     bot.api.send_message(chat_id: message.chat.id, text: e.message)
   rescue ParametrosInvalidosError => e
-    @logger.error "#{e.to_s}"
     bot.api.send_message(chat_id: message.chat.id, text: e.message)
   end
 
