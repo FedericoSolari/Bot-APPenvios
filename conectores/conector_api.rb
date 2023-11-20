@@ -1,14 +1,20 @@
 require 'faraday'
 require_relative '../excepciones/conexion_api_error'
+require_relative '../excepciones/parametros_invalidos_error'
+require_relative '../validadores/validador_entrada'
 
 class ConectorApi
   def initialize
     @api_url = ENV['API_URL'] || 'http://web:3000'
+    @validador = ValidadorEntrada.new
   end
 
   def registrar_cliente(nombre, direccion, codigo_postal, id_cliente)
-    cuerpo_solicitud = { nombre:, direccion:, codigo_postal:, id_cliente: }.to_json
+    parametros_invalidos = @validador.validar_cliente(nombre, direccion, codigo_postal)
+    raise ParametrosInvalidosError, 'Verifique que se hayan ingresado todos los parametros (nombre, direccion, codigo postal)' if parametros_invalidos
+
     begin
+      cuerpo_solicitud = { nombre:, direccion:, codigo_postal:, id_cliente: }.to_json
       respuesta_http = Faraday.post("#{@api_url}/registrar", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
       parseador_respuesta(respuesta_http)
     rescue Faraday::Error

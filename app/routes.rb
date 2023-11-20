@@ -2,6 +2,8 @@ require "#{File.dirname(__FILE__)}/../lib/routing"
 require "#{File.dirname(__FILE__)}/../lib/version"
 require "#{File.dirname(__FILE__)}/tv/series"
 require_relative '../conectores/conector_api'
+require_relative '../excepciones/parametros_invalidos_error'
+require_relative '../excepciones/conexion_api_error'
 
 class Routes
   include Routing
@@ -15,16 +17,13 @@ class Routes
   end
 
   on_message_pattern %r{/registrar (?<nombre>.*), (?<direccion>.*), (?<codigo_postal>.*)} do |bot, message, args|
-    nombre = args['nombre']
-    direccion = args['direccion']
-    codigo_postal = args['codigo_postal']
-    if direccion.nil? || direccion.empty? || codigo_postal.nil? || codigo_postal.empty?
-      bot.api.send_message(chat_id: message.chat.id, text: 'Verifique que se hayan ingresado todos los parametros (nombre, direccion, codigo postal)')
-    else
-      conector_api = ConectorApi.new
-      texto = conector_api.registrar_cliente(nombre, direccion, codigo_postal, message.chat.id)
-      bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
-    end
+    conector_api = ConectorApi.new
+    texto = conector_api.registrar_cliente(args['nombre'], args['direccion'], args['codigo_postal'], message.chat.id)
+    bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
+  rescue ConexionApiError => e
+    bot.api.send_message(chat_id: message.chat.id, text: e.message)
+  rescue ParametrosInvalidosError => e
+    bot.api.send_message(chat_id: message.chat.id, text: e.message)
   end
 
   on_message_pattern %r{/registrar-cadete (?<nombre>.*), (?<vehiculo>.*)} do |bot, message, args|

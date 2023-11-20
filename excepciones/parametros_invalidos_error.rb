@@ -1,0 +1,2 @@
+class ParametrosInvalidosError < StandardError
+end
