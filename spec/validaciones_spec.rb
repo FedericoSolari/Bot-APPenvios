@@ -23,4 +23,21 @@ describe 'Validaciones' do
       expect(respuesta).to eq true
     end
   end
+
+  describe 'cadete' do
+    it 'Debería devolver false al mandar Juan, Moto' do
+      respuesta = ValidadorEntrada.new.validar_cadete('Juan', 'Moto')
+      expect(respuesta).to eq false
+    end
+
+    it 'Debería devolver true al mandar Juan' do
+      respuesta = ValidadorEntrada.new.validar_cadete('Juan', nil)
+      expect(respuesta).to eq true
+    end
+
+    it 'Debería devolver true al mandar Moto' do
+      respuesta = ValidadorEntrada.new.validar_cadete(nil, 'Moto')
+      expect(respuesta).to eq true
+    end
+  end
 end
