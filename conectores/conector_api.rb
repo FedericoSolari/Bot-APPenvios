@@ -49,8 +49,8 @@ class ConectorApi
   end
 
   def asignar_envio(id_cadete)
-    cuerpo_solicitud = { id_cadete: }.to_json
     begin
+      cuerpo_solicitud = { id_cadete: }.to_json
       respuesta_http = Faraday.put("#{@api_url}/envios/asignar", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
       parseador_respuesta(respuesta_http)
     rescue Faraday::Error
@@ -59,15 +59,23 @@ class ConectorApi
   end
 
   def estado_envio(id_envio)
+    parametros_invalidos = @validador.validar_id_envio(id_envio)
+    raise ParametrosInvalidosError, 'Verifique que se haya ingresado el id de envio' if parametros_invalidos
+
+    begin
     respuesta_http = Faraday.get("#{@api_url}/envios/#{id_envio}")
     parseador_respuesta(respuesta_http)
   rescue Faraday::Error
     raise ConexionApiError
+    end
   end
 
-  def confirmar_envio(id_envio)
-    cuerpo_solicitud = { estado: 'entregado' }.to_json
+  def confirmar_entrega(id_envio)
+    parametros_invalidos = @validador.validar_id_envio(id_envio)
+    raise ParametrosInvalidosError, 'Verifique que se haya ingresado el id de envio' if parametros_invalidos
+
     begin
+      cuerpo_solicitud = { estado: 'entregado' }.to_json
       respuesta_http = Faraday.put("#{@api_url}/envios/#{id_envio}", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
       parseador_respuesta(respuesta_http)
     rescue Faraday::Error

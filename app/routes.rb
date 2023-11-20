@@ -47,28 +47,31 @@ class Routes
   end
 
   on_message_pattern %r{/estado-envio (?<id_envio>.*)} do |bot, message, args|
-    id_envio = args['id_envio']
-
-    if id_envio.nil? || id_envio.empty?
-      bot.api.send_message(chat_id: message.chat.id, text: 'Verifique que se haya ingresado el id de envio')
-    else
       conector_api = ConectorApi.new
-      texto = conector_api.estado_envio(id_envio)
+      texto = conector_api.estado_envio(args['id_envio'])
       bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
-    end
+  rescue ConexionApiError => e
+    bot.api.send_message(chat_id: message.chat.id, text: e.message)
+  rescue ParametrosInvalidosError => e
+    bot.api.send_message(chat_id: message.chat.id, text: e.message)
   end
 
   on_message '/asignar-envio' do |bot, message|
     conector_api = ConectorApi.new
     texto = conector_api.asignar_envio(message.chat.id)
     bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
+  rescue ConexionApiError => e
+    bot.api.send_message(chat_id: message.chat.id, text: e.message)
   end
 
   on_message_pattern %r{/confirmar-entrega (?<id_envio>.*)} do |bot, message, args|
-    id_envio = args['id_envio']
     conector_api = ConectorApi.new
-    texto = conector_api.confirmar_envio(id_envio)
+    texto = conector_api.confirmar_entrega(args['id_envio'])
     bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
+  rescue ConexionApiError => e
+    bot.api.send_message(chat_id: message.chat.id, text: e.message)
+  rescue ParametrosInvalidosError => e
+    bot.api.send_message(chat_id: message.chat.id, text: e.message)
   end
 
   on_message '/stop' do |bot, message|

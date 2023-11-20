@@ -15,4 +15,8 @@ class ValidadorEntrada
   def validar_envio(direccion, codigo_postal)
     direccion.nil? || direccion.empty? || codigo_postal.nil? || codigo_postal.empty?
   end
+
+  def validar_id_envio(id_envio)
+    id_envio.nil? || id_envio.empty? || id_envio.negative?
+  end
 end
