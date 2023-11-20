@@ -48,7 +48,7 @@ class Routes
 
   on_message_pattern %r{/estado-envio (?<id_envio>.*)} do |bot, message, args|
     conector_api = ConectorApi.new
-    texto = conector_api.estado_envio(args['id_envio'])
+    texto = conector_api.estado_envio(args['id_envio'].to_i)
     bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
   rescue ConexionApiError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message)
@@ -66,7 +66,7 @@ class Routes
 
   on_message_pattern %r{/confirmar-entrega (?<id_envio>.*)} do |bot, message, args|
     conector_api = ConectorApi.new
-    texto = conector_api.confirmar_entrega(args['id_envio'])
+    texto = conector_api.confirmar_entrega(args['id_envio'].to_i)
     bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
   rescue ConexionApiError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message)

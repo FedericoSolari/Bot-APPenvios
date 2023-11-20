@@ -56,5 +56,15 @@ describe 'Validaciones' do
       respuesta = ValidadorEntrada.new.validar_envio(nil, 'CP: 1245')
       expect(respuesta).to eq true
     end
+
+    it 'Debería devolver false al mandar 1' do
+      respuesta = ValidadorEntrada.new.validar_id_envio(1)
+      expect(respuesta).to eq false
+    end
+
+    it 'Debería devolver true al no mandar id' do
+      respuesta = ValidadorEntrada.new.validar_id_envio(nil)
+      expect(respuesta).to eq true
+    end
   end
 end
