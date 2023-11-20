@@ -6,4 +6,9 @@ class ValidadorEntrada
   def validar_cliente(nombre, direccion, codigo_postal)
     nombre.nil? || nombre.empty? || direccion.nil? || direccion.empty? || codigo_postal.nil? || codigo_postal.empty?
   end
+
+  def validar_cadete(nombre, vehiculo)
+    # agregar validacion de vehiculo (bicicleta, auto, moto)
+    nombre.nil? || nombre.empty? || vehiculo.nil? || vehiculo.empty?
+  end
 end

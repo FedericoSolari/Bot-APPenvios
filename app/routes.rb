@@ -27,15 +27,13 @@ class Routes
   end
 
   on_message_pattern %r{/registrar-cadete (?<nombre>.*), (?<vehiculo>.*)} do |bot, message, args|
-    nombre = args['nombre']
-    vehiculo = args['vehiculo']
-    if nombre.nil? || nombre.empty? || vehiculo.nil? || vehiculo.empty?
-      bot.api.send_message(chat_id: message.chat.id, text: 'Verifique que se hayan ingresado todos los parametros (nombre, vehiculo)')
-    else
-      conector_api = ConectorApi.new
-      texto = conector_api.registrar_cadete(nombre, vehiculo, message.chat.id)
-      bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
-    end
+    conector_api = ConectorApi.new
+    texto = conector_api.registrar_cadete(args['nombre'], args['vehiculo'], message.chat.id)
+    bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
+  rescue ConexionApiError => e
+    bot.api.send_message(chat_id: message.chat.id, text: e.message)
+  rescue ParametrosInvalidosError => e
+    bot.api.send_message(chat_id: message.chat.id, text: e.message)
   end
 
   on_message_pattern %r{/nuevo-envio (?<direccion>.*), (?<codigo_postal>.*)} do |bot, message, args|

@@ -23,8 +23,11 @@ class ConectorApi
   end
 
   def registrar_cadete(nombre, vehiculo, id_cadete)
-    cuerpo_solicitud = { nombre:, vehiculo:, id_cadete: }.to_json
+    parametros_invalidos = @validador.validar_cadete(nombre, vehiculo)
+    raise ParametrosInvalidosError, 'Verifique que se hayan ingresado todos los parametros (nombre, vehiculo)' if parametros_invalidos
+
     begin
+      cuerpo_solicitud = { nombre:, vehiculo:, id_cadete: }.to_json
       respuesta_http = Faraday.post("#{@api_url}/registrar_cadete", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
       parseador_respuesta(respuesta_http)
     rescue Faraday::Error
