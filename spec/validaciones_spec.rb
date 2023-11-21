@@ -57,9 +57,9 @@ describe 'Validaciones' do
       expect(respuesta).to eq false
     end
 
-    xit 'Debería devolver true al mandar enorme, Av. Cerrito 630, CP: 1245' do
+    it 'Debería devolver true al mandar enorme, Av. Cerrito 630, CP: 1245' do
       respuesta = ValidadorEntrada.new.validar_envio('enorme', 'Av. Cerrito 630', 'CP: 1245')
-      expect(respuesta).to eq false
+      expect(respuesta).to eq true
     end
 
     it 'Debería devolver true al mandar chico, Av. Cerrito 630' do
