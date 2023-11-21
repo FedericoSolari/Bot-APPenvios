@@ -43,22 +43,25 @@ describe 'Validaciones' do
 
   describe 'envio' do
     it 'Debería devolver false al mandar chico, Av. Cerrito 630, CP: 1245' do
-      respuesta = ValidadorEntrada.new.validar_envio('chico', 'Av. Cerrito 630', 'CP: 1245')
+      # respuesta = ValidadorEntrada.new.validar_envio('chico', 'Av. Cerrito 630', 'CP: 1245')
+      respuesta = ValidadorEntrada.new.validar_tamanio('chico')
       expect(respuesta).to eq false
     end
 
     it 'Debería devolver false al mandar mediano, Av. Cerrito 630, CP: 1245' do
-      respuesta = ValidadorEntrada.new.validar_envio('mediano', 'Av. Cerrito 630', 'CP: 1245')
+      # respuesta = ValidadorEntrada.new.validar_envio('mediano', 'Av. Cerrito 630', 'CP: 1245')
+      respuesta = ValidadorEntrada.new.validar_tamanio('mediano')
       expect(respuesta).to eq false
     end
 
     it 'Debería devolver false al mandar grande, Av. Cerrito 630, CP: 1245' do
-      respuesta = ValidadorEntrada.new.validar_envio('grande', 'Av. Cerrito 630', 'CP: 1245')
+      # respuesta = ValidadorEntrada.new.validar_envio('grande', 'Av. Cerrito 630', 'CP: 1245')
+      respuesta = ValidadorEntrada.new.validar_tamanio('grande')
       expect(respuesta).to eq false
     end
 
     it 'Debería devolver true al mandar enorme, Av. Cerrito 630, CP: 1245' do
-      respuesta = ValidadorEntrada.new.validar_envio('enorme', 'Av. Cerrito 630', 'CP: 1245')
+      respuesta = ValidadorEntrada.new.validar_tamanio('enorme')
       expect(respuesta).to eq true
     end
 

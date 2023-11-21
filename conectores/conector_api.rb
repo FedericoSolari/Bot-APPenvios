@@ -38,6 +38,7 @@ class ConectorApi
   def realizar_envio(tamanio, direccion, codigo_postal, id_cliente)
     parametros_invalidos = @validador.validar_envio(tamanio, direccion, codigo_postal)
     raise ParametrosInvalidosError, 'Verifique que se hayan ingresado todos los parametros (tamaño, direccion, codigo postal)' if parametros_invalidos
+
     tamanio_invalido = @validador.validar_tamanio(tamanio)
     raise ParametrosInvalidosError, 'Tamaño indicado incorrecto, los tamaños validos son: Chico, Mediano o Grande' if tamanio_invalido
 
