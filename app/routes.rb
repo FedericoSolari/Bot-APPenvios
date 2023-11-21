@@ -36,9 +36,9 @@ class Routes
     bot.api.send_message(chat_id: message.chat.id, text: e.message)
   end
 
-  on_message_pattern %r{/nuevo-envio (?<direccion>.*), (?<codigo_postal>.*)} do |bot, message, args|
+  on_message_pattern %r{/nuevo-envio (?<tamanio>.*), (?<direccion>.*), (?<codigo_postal>.*)} do |bot, message, args|
     conector_api = ConectorApi.new
-    texto = conector_api.realizar_envio(args['direccion'], args['codigo_postal'], message.chat.id)
+    texto = conector_api.realizar_envio(args['tamanio'], args['direccion'], args['codigo_postal'], message.chat.id)
     bot.api.send_message(chat_id: message.chat.id, text: texto['text'])
   rescue ConexionApiError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message)

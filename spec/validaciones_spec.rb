@@ -42,18 +42,18 @@ describe 'Validaciones' do
   end
 
   describe 'envio' do
-    it 'Debería devolver false al mandar Av. Cerrito 630, CP: 1245' do
-      respuesta = ValidadorEntrada.new.validar_envio('Av. Cerrito 630', 'CP: 1245')
+    it 'Debería devolver false al mandar chico, Av. Cerrito 630, CP: 1245' do
+      respuesta = ValidadorEntrada.new.validar_envio('chico', 'Av. Cerrito 630', 'CP: 1245')
       expect(respuesta).to eq false
     end
 
-    it 'Debería devolver true al mandar Av. Cerrito 630' do
-      respuesta = ValidadorEntrada.new.validar_envio('Av. Cerrito 630', nil)
+    it 'Debería devolver true al mandar chico, Av. Cerrito 630' do
+      respuesta = ValidadorEntrada.new.validar_envio('chico', 'Av. Cerrito 630', nil)
       expect(respuesta).to eq true
     end
 
     it 'Debería devolver true al mandar CP: 1245' do
-      respuesta = ValidadorEntrada.new.validar_envio(nil, 'CP: 1245')
+      respuesta = ValidadorEntrada.new.validar_envio('chico', nil, 'CP: 1245')
       expect(respuesta).to eq true
     end
 
