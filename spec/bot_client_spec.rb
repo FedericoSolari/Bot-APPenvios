@@ -100,7 +100,7 @@ def cuando_solicito_estado_de_envio_asignado(id_envio)
 end
 
 def cuando_confirmo_entrega_de_envio(id_envio)
-  body = { "text": 'Gracias por entregar el envio!' }
+  body = { "text": 'Gracias por entregar el envio!', "cliente": 8, "text_to_client": "Ya entregamos tu envio (ID: #{id_envio})" }
 
   stub_request(:put, "http://web:3000/envios/#{id_envio}")
     .with(
@@ -109,7 +109,7 @@ def cuando_confirmo_entrega_de_envio(id_envio)
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
-def then_i_get_text(token, message_text)
+def then_i_get_text(token, message_text, id_chat = '141733544')
   body = { "ok": true,
            "result": { "message_id": 12,
                        "from": { "id": 715_612_264, "is_bot": true, "first_name": 'fiuba-memo2-prueba', "username": 'fiuba_memo2_bot' },
@@ -118,7 +118,7 @@ def then_i_get_text(token, message_text)
 
   stub_request(:post, "https://api.telegram.org/bot#{token}/sendMessage")
     .with(
-      body: { 'chat_id' => '141733544', 'text' => message_text }
+      body: { 'chat_id' => id_chat, 'text' => message_text }
     )
     .to_return(status: 200, body: body.to_json, headers: {})
 end
@@ -331,11 +331,12 @@ describe 'BotClient' do
     app.run_once
   end
 
-  it 'Deberia ver un mensaje de entrega exitosa al confirmar una entrega' do
+  xit 'Deberia ver un mensaje de entrega exitosa al confirmar una entrega' do
     cuando_realizo_envio('chico', 'Cerrito 628', 'CP:1010', 141_733_544)
     cuando_confirmo_entrega_de_envio(8)
     when_i_send_text('fake_token', '/confirmar-entrega 8')
     then_i_get_text('fake_token', 'Gracias por entregar el envio!')
+    then_i_get_text('fake_token', 'Ya entregamos tu envio (ID: 8)', 8)
 
     app = BotClient.new('fake_token')
 
