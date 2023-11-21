@@ -13,8 +13,13 @@ class ValidadorEntrada
   end
 
   def validar_envio(tamanio, direccion, codigo_postal)
-    !%w[chico mediano grande].include?(tamanio.downcase) || direccion.nil? || direccion.empty? || codigo_postal.nil? || codigo_postal.empty?
+    tamanio.nil? && tamanio.empty? && direccion.nil? && direccion.empty? && codigo_postal.nil? && codigo_postal.empty?
   end
+  
+  def validar_tamanio(tamanio)
+    !%w[chico mediano grande].include?(tamanio.downcase)
+  end
+  
 
   def validar_id_envio(id_envio)
     id_envio.nil? || id_envio.negative?
