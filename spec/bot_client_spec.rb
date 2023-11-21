@@ -331,7 +331,7 @@ describe 'BotClient' do
     app.run_once
   end
 
-  xit 'Deberia ver un mensaje de entrega exitosa al confirmar una entrega' do
+  it 'Deberia ver un mensaje de entrega exitosa al confirmar una entrega' do
     cuando_realizo_envio('chico', 'Cerrito 628', 'CP:1010', 141_733_544)
     cuando_confirmo_entrega_de_envio(8)
     when_i_send_text('fake_token', '/confirmar-entrega 8')
