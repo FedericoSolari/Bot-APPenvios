@@ -66,7 +66,7 @@ def cuando_registro_cadete(nombre, vehiculo, id_cadete)
 end
 
 def cuando_solicito_asignacion_de_envio(id_cadete)
-  body = { "text": 'Te asignamos el siguiente envio con ID 1. Retirar el envio en Av Las Heras 1232, CP: 1425. Entregar el envio en Cerrito 628, CP: 1010. Tiempo estimado: ' }
+  body = { "text": 'Te asignamos el siguiente envio con ID 1. Retirar el envio en Av Las Heras 1232, CP: 1425. Entregar el envio en *_Cerrito 628, CP: 1010.' }
 
   stub_request(:put, 'http://web:3000/envios/asignar')
     .with(
@@ -118,7 +118,7 @@ def then_i_get_text(token, message_text, id_chat = '141733544')
 
   stub_request(:post, "https://api.telegram.org/bot#{token}/sendMessage")
     .with(
-      body: { 'chat_id' => id_chat, 'text' => message_text }
+      body: { 'chat_id' => id_chat, 'text' => message_text, 'parse_mode' => 'MarkdownV2' }
     )
     .to_return(status: 200, body: body.to_json, headers: {})
 end
@@ -133,6 +133,7 @@ def then_i_get_keyboard_message(token, message_text)
   stub_request(:post, "https://api.telegram.org/bot#{token}/sendMessage")
     .with(
       body: { 'chat_id' => '141733544',
+              'parse_mode' => 'MarkdownV2',
               'reply_markup' => '{"inline_keyboard":[[{"text":"Jon Snow","callback_data":"1"},{"text":"Daenerys Targaryen","callback_data":"2"},{"text":"Ned Stark","callback_data":"3"}]]}',
               'text' => 'Quien se queda con el trono?' }
     )
@@ -300,7 +301,7 @@ describe 'BotClient' do
   it 'Deberia ver un mensaje de asignacion exitosa al solicitar asignacion' do
     cuando_solicito_asignacion_de_envio(141_733_544)
     when_i_send_text('fake_token', '/asignar-envio')
-    then_i_get_text('fake_token', 'Te asignamos el siguiente envio con ID 1. Retirar el envio en Av Las Heras 1232, CP: 1425. Entregar el envio en Cerrito 628, CP: 1010. Tiempo estimado: ')
+    then_i_get_text('fake_token', 'Te asignamos el siguiente envio con ID 1\\. Retirar el envio en Av Las Heras 1232, CP: 1425\\. Entregar el envio en *_Cerrito 628, CP: 1010\\.')
 
     app = BotClient.new('fake_token')
 
@@ -312,7 +313,7 @@ describe 'BotClient' do
     cuando_realizo_envio('chico', 'Cerrito 628', 'CP:1010', 141_733_544)
     cuando_solicito_estado_de_envio_sin_asignar(8)
     when_i_send_text('fake_token', '/estado-envio 8')
-    then_i_get_text('fake_token', 'Tu envio (ID: 8) se encuentra pendiente de asignación')
+    then_i_get_text('fake_token', 'Tu envio \\(ID: 8\\) se encuentra pendiente de asignación')
 
     app = BotClient.new('fake_token')
 
@@ -324,7 +325,7 @@ describe 'BotClient' do
     cuando_solicito_asignacion_de_envio(141_733_544)
     cuando_solicito_estado_de_envio_asignado(8)
     when_i_send_text('fake_token', '/estado-envio 8')
-    then_i_get_text('fake_token', 'Tu envio (ID: 8) se encuentra en proceso de entrega')
+    then_i_get_text('fake_token', 'Tu envio \\(ID: 8\\) se encuentra en proceso de entrega')
 
     app = BotClient.new('fake_token')
 
@@ -335,8 +336,8 @@ describe 'BotClient' do
     cuando_realizo_envio('chico', 'Cerrito 628', 'CP:1010', 141_733_544)
     cuando_confirmo_entrega_de_envio(8)
     when_i_send_text('fake_token', '/confirmar-entrega 8')
-    then_i_get_text('fake_token', 'Gracias por entregar el envio!')
-    then_i_get_text('fake_token', 'Ya entregamos tu envio (ID: 8)', 8)
+    then_i_get_text('fake_token', 'Gracias por entregar el envio\\!')
+    then_i_get_text('fake_token', 'Ya entregamos tu envio \\(ID: 8\\)', 8)
 
     app = BotClient.new('fake_token')
 
