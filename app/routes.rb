@@ -118,6 +118,6 @@ class Routes
   end
 
   default do |bot, message|
-    bot.api.send_message(chat_id: message.chat.id, text: 'Uh? No te entiendo! Me repetis la pregunta?', parse_mode: 'MarkdownV2')
+    bot.api.send_message(chat_id: message.chat.id, text: 'Uh? No te entiendo\\! Me repetis la pregunta?', parse_mode: 'MarkdownV2')
   end
 end

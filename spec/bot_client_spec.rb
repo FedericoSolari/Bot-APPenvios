@@ -211,7 +211,7 @@ describe 'BotClient' do
     token = 'fake_token'
 
     when_i_send_text(token, '/unknown')
-    then_i_get_text(token, 'Uh? No te entiendo! Me repetis la pregunta?')
+    then_i_get_text(token, 'Uh? No te entiendo\\! Me repetis la pregunta?')
 
     app = BotClient.new(token)
 
