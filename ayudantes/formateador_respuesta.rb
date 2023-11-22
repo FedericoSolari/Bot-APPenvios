@@ -1,11 +1,9 @@
 class FormateadorRespuesta
+  attr_accessor :texto, :cliente_id, :texto_cliente
+
   def initialize(respuesta)
     @texto = respuesta['text']
-    @cliente = respuesta['cliente']
+    @cliente_id = respuesta['cliente']
     @texto_cliente = respuesta['text_to_client']
-  end
-
-  def obtener_texto
-    @texto
   end
 end
