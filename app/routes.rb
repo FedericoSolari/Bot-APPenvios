@@ -4,7 +4,9 @@ require "#{File.dirname(__FILE__)}/tv/series"
 require_relative '../conectores/conector_api'
 require_relative '../excepciones/parametros_invalidos_error'
 require_relative '../excepciones/conexion_api_error'
+require_relative '../ayudantes/formateador_respuesta'
 
+# rubocop:disable Metrics/ClassLength
 class Routes
   include Routing
 
@@ -19,7 +21,8 @@ class Routes
   on_message_pattern %r{/registrar (?<nombre>.*), (?<direccion>.*), (?<codigo_postal>.*)} do |bot, message, args|
     conector_api = ConectorApi.new
     respuesta = conector_api.registrar_cliente(args['nombre'], args['direccion'], args['codigo_postal'], message.chat.id)
-    bot.api.send_message(chat_id: message.chat.id, text: respuesta['text'].gsub(/[-.()!]/, '\\\\\0'), parse_mode: 'MarkdownV2')
+    formateador = FormateadorRespuesta.new(respuesta)
+    bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
   rescue ConexionApiError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   rescue ParametrosInvalidosError => e
@@ -28,8 +31,9 @@ class Routes
 
   on_message_pattern %r{/registrar-cadete (?<nombre>.*), (?<vehiculo>.*)} do |bot, message, args|
     conector_api = ConectorApi.new
-    texto = conector_api.registrar_cadete(args['nombre'], args['vehiculo'], message.chat.id)
-    bot.api.send_message(chat_id: message.chat.id, text: texto['text'].gsub(/[-.()!]/, '\\\\\0'), parse_mode: 'MarkdownV2')
+    respuesta = conector_api.registrar_cadete(args['nombre'], args['vehiculo'], message.chat.id)
+    formateador = FormateadorRespuesta.new(respuesta)
+    bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
   rescue ConexionApiError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   rescue ParametrosInvalidosError => e
@@ -38,8 +42,9 @@ class Routes
 
   on_message_pattern %r{/nuevo-envio (?<tamanio>.*), (?<direccion>.*), (?<codigo_postal>.*)} do |bot, message, args|
     conector_api = ConectorApi.new
-    texto = conector_api.realizar_envio(args['tamanio'], args['direccion'], args['codigo_postal'], message.chat.id)
-    bot.api.send_message(chat_id: message.chat.id, text: texto['text'].gsub(/[-.()!]/, '\\\\\0'), parse_mode: 'MarkdownV2')
+    respuesta = conector_api.realizar_envio(args['tamanio'], args['direccion'], args['codigo_postal'], message.chat.id)
+    formateador = FormateadorRespuesta.new(respuesta)
+    bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
   rescue ConexionApiError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   rescue ParametrosInvalidosError => e
@@ -48,8 +53,9 @@ class Routes
 
   on_message_pattern %r{/estado-envio (?<id_envio>.*)} do |bot, message, args|
     conector_api = ConectorApi.new
-    texto = conector_api.estado_envio(args['id_envio'].to_i)
-    bot.api.send_message(chat_id: message.chat.id, text: texto['text'].gsub(/[-.()!]/, '\\\\\0'), parse_mode: 'MarkdownV2')
+    respuesta = conector_api.estado_envio(args['id_envio'].to_i)
+    formateador = FormateadorRespuesta.new(respuesta)
+    bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
   rescue ConexionApiError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   rescue ParametrosInvalidosError => e
@@ -58,8 +64,9 @@ class Routes
 
   on_message '/asignar-envio' do |bot, message|
     conector_api = ConectorApi.new
-    texto = conector_api.asignar_envio(message.chat.id)
-    bot.api.send_message(chat_id: message.chat.id, text: texto['text'].gsub(/[-.()!]/, '\\\\\0'), parse_mode: 'MarkdownV2')
+    respuesta = conector_api.asignar_envio(message.chat.id)
+    formateador = FormateadorRespuesta.new(respuesta)
+    bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
   rescue ConexionApiError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   end
@@ -67,10 +74,9 @@ class Routes
   on_message_pattern %r{/confirmar-entrega (?<id_envio>.*)} do |bot, message, args|
     conector_api = ConectorApi.new
     respuesta = conector_api.confirmar_entrega(args['id_envio'].to_i)
-    cliente = respuesta['cliente']
-    bot.api.send_message(chat_id: message.chat.id, text: respuesta['text'].gsub(/[-.()!]/, '\\\\\0'), parse_mode: 'MarkdownV2')
-    # envio mensaje al cliente
-    bot.api.send_message(chat_id: cliente, text: respuesta['text_to_client'].gsub(/[-.()!]/, '\\\\\0'), parse_mode: 'MarkdownV2')
+    formateador = FormateadorRespuesta.new(respuesta)
+    bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
+    bot.api.send_message(chat_id: formateador.cliente_id, text: formateador.texto_cliente, parse_mode: 'MarkdownV2')
   rescue ConexionApiError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   rescue ParametrosInvalidosError => e
@@ -121,3 +127,4 @@ class Routes
     bot.api.send_message(chat_id: message.chat.id, text: 'Uh? No te entiendo\\! Me repetis la pregunta?', parse_mode: 'MarkdownV2')
   end
 end
+# rubocop:enable Metrics/ClassLength
