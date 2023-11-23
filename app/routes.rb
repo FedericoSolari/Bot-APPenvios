@@ -87,14 +87,21 @@ class Routes
   default do |bot, message|
     bot.api.send_message(
       chat_id: message.chat.id,
-      text: "El comando ingresado no existe\n\n" \
-            "Los comandos válidos son:\n" \
-            "* Registrar cliente: /registrar nombre, direccion, codigo_postal\n" \
-            "* Registrar cadete: /registrar cadete nombre, vehiculo\n" \
-            "* Nuevo envío: /nuevo envio tamaño, direccion, codigo_postal\n" \
-            "* Consultar estado de envío: /estado envio id_envio\n" \
-            "* Asignar cadete a envío: /asignar envio\n" \
-            "* Confirmar entrega de envío: /confirmar entrega id_envio",
+      text: 'El comando ingresado no existe' \
+            "\n"\
+            'Los comandos válidos son:' \
+            "\n"\
+            '* Registrar cliente:* /registrar\-nombre, direccion, codigo_postal' \
+            "\n"\
+            '* Registrar cadete:* /registrar\-cadete nombre, vehiculo' \
+            "\n"\
+            '* Nuevo envío:* /nuevo\-envio tamaño, direccion, codigo_postal' \
+            "\n"\
+            '* Consultar estado de envío:* /estado\-envio id_envio' \
+            "\n"\
+            '* Asignar cadete a envío:* /asignar\-envio' \
+            "\n"\
+            '* Confirmar entrega de envío:* /confirmar\-entrega id_envio',
       parse_mode: 'MarkdownV2'
     )
   end

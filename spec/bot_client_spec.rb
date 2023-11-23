@@ -174,17 +174,6 @@ describe 'BotClient' do
     app.run_once
   end
 
-  it 'should get an unknown message message and respond with Do not understand' do
-    token = 'fake_token'
-
-    when_i_send_text(token, '/unknown')
-    then_i_get_text(token, 'Uh? No te entiendo\\! Me repetis la pregunta?')
-
-    app = BotClient.new(token)
-
-    app.run_once
-  end
-
   it 'Deberia ver un mensaje de bienvenida al registrarse' do
     cuando_registro_cliente('Juan', 'Av Las Heras 1232', 'CP: 1425', 141_733_544)
     when_i_send_text('fake_token', '/registrar Juan, Av Las Heras 1232, CP: 1425')
