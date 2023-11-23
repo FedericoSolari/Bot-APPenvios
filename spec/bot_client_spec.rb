@@ -48,7 +48,7 @@ end
 def cuando_registro_cliente(nombre, direccion, codigo_postal, id_cliente)
   body = { "text": "Bienvenid@ #{nombre}" }
 
-  stub_request(:any, 'http://web:3000/registrar')
+  stub_request(:any, 'http://web:3000/clientes')
     .with(
       body: { 'nombre' => nombre, 'direccion' => direccion, 'codigo_postal' => codigo_postal, 'id_cliente' => id_cliente }
     )
