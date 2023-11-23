@@ -28,7 +28,7 @@ class ConectorApi
 
     begin
       cuerpo_solicitud = { nombre:, vehiculo:, id_cadete: }.to_json
-      respuesta_http = Faraday.post("#{@api_url}/registrar_cadete", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
+      respuesta_http = Faraday.post("#{@api_url}/cadetes", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
       parseador_respuesta(respuesta_http)
     rescue Faraday::Error
       raise ConexionApiError

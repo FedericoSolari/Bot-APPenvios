@@ -58,7 +58,7 @@ end
 def cuando_registro_cadete(nombre, vehiculo, id_cadete)
   body = { "text": "Bienvenid@ a la flota #{nombre}" }
 
-  stub_request(:any, 'http://web:3000/registrar_cadete')
+  stub_request(:any, 'http://web:3000/cadetes')
     .with(
       body: { 'nombre' => nombre, 'vehiculo' => vehiculo, 'id_cadete' => id_cadete }
     )

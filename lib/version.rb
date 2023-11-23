@@ -1,5 +1,5 @@
 class Version
-  MAYOR = 5
+  MAYOR = 6
   MINOR = 0
   PATCH = 0
 
