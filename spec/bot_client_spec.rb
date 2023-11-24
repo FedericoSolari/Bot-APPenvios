@@ -66,7 +66,7 @@ def cuando_registro_cadete(nombre, vehiculo, id_cadete)
 end
 
 def cuando_solicito_asignacion_de_envio(id_cadete)
-  body = { "text": 'Te asignamos el siguiente envio con ID 1. Retirar el envio en Av Las Heras 1232, CP: 1425. Entregar el envio en *_Cerrito 628, CP: 1010.' }
+  body = { "text": 'Te asignamos el siguiente envio con ID 1. Retirar el envio en Av Las Heras 1232, CP: 1425. Entregar el envio en Cerrito 628, CP: 1010.' }
 
   stub_request(:put, 'http://web:3000/envios/asignar')
     .with(
@@ -93,7 +93,7 @@ def cuando_solicito_estado_de_envio_sin_asignar(id_envio)
 end
 
 def cuando_solicito_estado_de_envio_asignado(id_envio)
-  body = { "text": "Tu envio (ID: #{id_envio}) se encuentra en proceso de entrega" }
+  body = { "text": "Tu envio (ID: #{id_envio}) fue asignado a Pedro, ya está en camino!" }
 
   stub_request(:get, "http://web:3000/envios/#{id_envio}")
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
@@ -257,7 +257,7 @@ describe 'BotClient' do
   it 'Deberia ver un mensaje de asignacion exitosa al solicitar asignacion' do
     cuando_solicito_asignacion_de_envio(141_733_544)
     when_i_send_text('fake_token', '/asignar-envio')
-    then_i_get_text('fake_token', 'Te asignamos el siguiente envio con ID 1\\. Retirar el envio en Av Las Heras 1232, CP: 1425\\. Entregar el envio en *_Cerrito 628, CP: 1010\\.')
+    then_i_get_text('fake_token', 'Te asignamos el siguiente envio con ID 1\\. Retirar el envio en Av Las Heras 1232, CP: 1425\\. Entregar el envio en Cerrito 628, CP: 1010\\.')
 
     app = BotClient.new('fake_token')
 
@@ -281,7 +281,7 @@ describe 'BotClient' do
     cuando_solicito_asignacion_de_envio(141_733_544)
     cuando_solicito_estado_de_envio_asignado(8)
     when_i_send_text('fake_token', '/estado-envio 8')
-    then_i_get_text('fake_token', 'Tu envio \\(ID: 8\\) se encuentra en proceso de entrega')
+    then_i_get_text('fake_token', 'Tu envio \\(ID: 8\\) fue asignado a Pedro, ya está en camino\\!')
 
     app = BotClient.new('fake_token')
 
