@@ -75,6 +75,18 @@ class Routes
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   end
 
+  on_message_pattern %r{/confirmar-retiro (?<id_envio>.*)} do |bot, message, args|
+    respuesta = ConectorApi.new.confirmar_retiro(args['id_envio'].to_i)
+    formateador = FormateadorRespuesta.new(respuesta)
+    bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
+  rescue SolicitudNoExistosaError => e
+    bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
+  rescue ConexionApiError => e
+    bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
+  rescue ParametrosInvalidosError => e
+    bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
+  end
+
   on_message '/stop' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: "Chau, #{message.from.username}", parse_mode: 'MarkdownV2')
   end

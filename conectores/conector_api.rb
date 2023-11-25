@@ -67,7 +67,6 @@ class ConectorApi
     begin
       cuerpo_solicitud = { id_cliente: }.to_json
       respuesta_http = Faraday.post("#{@api_url}/envios/#{id_envio}", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
-      # respuesta_http = Faraday.get("#{@api_url}/envios/#{id_envio}")
       parseador_respuesta(respuesta_http)
     rescue Faraday::Error
       raise ConexionApiError
@@ -80,6 +79,22 @@ class ConectorApi
 
     begin
       cuerpo_solicitud = { estado: 'entregado' }.to_json
+      respuesta_http = Faraday.put("#{@api_url}/envios/#{id_envio}", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
+      respuesta_parseada = parseador_respuesta(respuesta_http)
+      raise SolicitudNoExistosaError, respuesta_parseada['text'] unless solicitud_exitosa(respuesta_http)
+
+      respuesta_parseada
+    rescue Faraday::Error
+      raise ConexionApiError
+    end
+  end
+
+  def confirmar_retiro(id_envio)
+    parametros_invalidos = @validador.validar_id_envio(id_envio)
+    raise ParametrosInvalidosError, 'Verifique que se haya ingresado el id de envio' if parametros_invalidos
+
+    begin
+      cuerpo_solicitud = { estado: 'en camino' }.to_json
       respuesta_http = Faraday.put("#{@api_url}/envios/#{id_envio}", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
       respuesta_parseada = parseador_respuesta(respuesta_http)
       raise SolicitudNoExistosaError, respuesta_parseada['text'] unless solicitud_exitosa(respuesta_http)

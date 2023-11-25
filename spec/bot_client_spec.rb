@@ -115,6 +115,16 @@ def cuando_confirmo_entrega_de_envio(id_envio)
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
+def cuando_confirmo_retiro_de_envio(id_envio)
+  body = { "text": 'Gracias por retirar el envio!', "cliente": 8 }
+
+  stub_request(:put, "http://web:3000/envios/#{id_envio}")
+    .with(
+      body: { 'estado' => 'en camino' }
+    )
+    .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
+end
+
 def then_i_get_text(token, message_text, id_chat = '141733544')
   body = { "ok": true,
            "result": { "message_id": 12,
@@ -306,7 +316,7 @@ describe 'BotClient' do
     app.run_once
   end
 
-  xit 'Deberia ver un mensaje de retiro exitoso al retirar una entrega' do
+  it 'Deberia ver un mensaje de retiro exitoso al retirar una entrega' do
     cuando_realizo_envio('chico', 'Cerrito 628', 'CP:1010', 141_733_544)
     cuando_confirmo_retiro_de_envio(8)
     when_i_send_text('fake_token', '/confirmar-retiro 8')
