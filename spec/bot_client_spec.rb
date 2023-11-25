@@ -305,5 +305,15 @@ describe 'BotClient' do
 
     app.run_once
   end
+
+  xit 'Deberia ver un mensaje de retiro exitoso al retirar una entrega' do
+    cuando_realizo_envio('chico', 'Cerrito 628', 'CP:1010', 141_733_544)
+    cuando_confirmo_retiro_de_envio(8)
+    when_i_send_text('fake_token', '/confirmar-retiro 8')
+    then_i_get_text('fake_token', 'Gracias por retirar el envio\\!')
+    app = BotClient.new('fake_token')
+
+    app.run_once
+  end
   # rubocop:enable RSpec/ExampleLength
 end
