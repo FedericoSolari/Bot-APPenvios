@@ -84,10 +84,6 @@ class Routes
   end
 
   default do |bot, message|
-    bot.api.send_message(chat_id: message.chat.id, text: 'Uh? No te entiendo\\! Me repetis la pregunta?', parse_mode: 'MarkdownV2')
-  end
-
-  default do |bot, message|
     bot.api.send_message(
       chat_id: message.chat.id,
       text: 'El comando ingresado no existe' \
@@ -100,11 +96,11 @@ class Routes
             "\n"\
             '* Nuevo envío:* /nuevo\-envio tamaño, direccion, codigo_postal' \
             "\n"\
-            '* Consultar estado de envío:* /estado\-envio id_envio' \
+            '* Consultar estado de envío:* /estado\-envio id\\_del\\_envio' \
             "\n"\
             '* Asignar cadete a envío:* /asignar\-envio' \
             "\n"\
-            '* Confirmar entrega de envío:* /confirmar\-entrega id_envio',
+            '* Confirmar entrega de envío:* /confirmar\-entrega id\\_del\\_envio',
       parse_mode: 'MarkdownV2'
     )
   end
