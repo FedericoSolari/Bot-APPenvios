@@ -4,6 +4,7 @@ require "#{File.dirname(__FILE__)}/tv/series"
 require_relative '../conectores/conector_api'
 require_relative '../excepciones/parametros_invalidos_error'
 require_relative '../excepciones/conexion_api_error'
+require_relative '../excepciones/solicitud_no_exitosa_error'
 require_relative '../ayudantes/formateador_respuesta'
 
 class Routes
@@ -66,6 +67,8 @@ class Routes
     formateador = FormateadorRespuesta.new(respuesta)
     bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
     bot.api.send_message(chat_id: formateador.cliente_id, text: formateador.texto_cliente, parse_mode: 'MarkdownV2')
+  rescue SolicitudNoExistosaError => e
+    bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   rescue ConexionApiError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   rescue ParametrosInvalidosError => e

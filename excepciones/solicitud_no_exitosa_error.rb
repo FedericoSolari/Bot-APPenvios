@@ -1,0 +1,2 @@
+class SolicitudNoExistosaError < StandardError
+end

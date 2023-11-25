@@ -1,6 +1,7 @@
 require 'faraday'
 require_relative '../excepciones/conexion_api_error'
 require_relative '../excepciones/parametros_invalidos_error'
+require_relative '../excepciones/solicitud_no_exitosa_error'
 require_relative '../validadores/validador_entrada'
 
 class ConectorApi
@@ -78,7 +79,10 @@ class ConectorApi
     begin
       cuerpo_solicitud = { estado: 'entregado' }.to_json
       respuesta_http = Faraday.put("#{@api_url}/envios/#{id_envio}", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
-      parseador_respuesta(respuesta_http)
+      respuesta_parseada = parseador_respuesta(respuesta_http)
+      raise SolicitudNoExistosaError, respuesta_parseada['text'] unless solicitud_exitosa(respuesta_http)
+
+      respuesta_parseada
     rescue Faraday::Error
       raise ConexionApiError
     end
@@ -88,5 +92,9 @@ class ConectorApi
 
   def parseador_respuesta(respuesta_http)
     JSON.parse(respuesta_http.body)
+  end
+
+  def solicitud_exitosa(respuesta)
+    respuesta.status >= 200 && respuesta.status < 300
   end
 end
