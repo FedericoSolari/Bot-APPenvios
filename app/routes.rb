@@ -45,7 +45,7 @@ class Routes
   end
 
   on_message_pattern %r{/estado-envio (?<id_envio>.*)} do |bot, message, args|
-    respuesta = ConectorApi.new.estado_envio(args['id_envio'].to_i)
+    respuesta = ConectorApi.new.estado_envio(args['id_envio'].to_i, message.chat.id)
     formateador = FormateadorRespuesta.new(respuesta)
     bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
   rescue ConexionApiError => e

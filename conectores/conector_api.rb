@@ -60,12 +60,14 @@ class ConectorApi
     raise ConexionApiError
   end
 
-  def estado_envio(id_envio)
+  def estado_envio(id_envio, id_cliente)
     parametros_invalidos = @validador.validar_id_envio(id_envio)
     raise ParametrosInvalidosError, 'Verifique que se haya ingresado el id de envio' if parametros_invalidos
 
     begin
-      respuesta_http = Faraday.get("#{@api_url}/envios/#{id_envio}")
+      cuerpo_solicitud = { id_cliente: }.to_json
+      respuesta_http = Faraday.post("#{@api_url}/envios/#{id_envio}", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
+      # respuesta_http = Faraday.get("#{@api_url}/envios/#{id_envio}")
       parseador_respuesta(respuesta_http)
     rescue Faraday::Error
       raise ConexionApiError

@@ -85,17 +85,23 @@ def cuando_realizo_envio(tamanio, direccion, codigo_postal, id_cliente)
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
-def cuando_solicito_estado_de_envio_sin_asignar(id_envio)
+def cuando_solicito_estado_de_envio_sin_asignar(id_envio, id_cliente)
   body = { "text": "Tu envio (ID: #{id_envio}) se encuentra pendiente de asignación" }
 
-  stub_request(:get, "http://web:3000/envios/#{id_envio}")
+  stub_request(:post, "http://web:3000/envios/#{id_envio}")
+    .with(
+      body: { 'id_cliente' => id_cliente }
+    )
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
-def cuando_solicito_estado_de_envio_asignado(id_envio)
+def cuando_solicito_estado_de_envio_asignado(id_envio, id_cliente)
   body = { "text": "Tu envio (ID: #{id_envio}) fue asignado a Pedro, ya está en camino!" }
 
-  stub_request(:get, "http://web:3000/envios/#{id_envio}")
+  stub_request(:post, "http://web:3000/envios/#{id_envio}")
+    .with(
+      body: { 'id_cliente' => id_cliente }
+    )
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
@@ -267,7 +273,7 @@ describe 'BotClient' do
   # rubocop:disable RSpec/ExampleLength
   it 'Deberia ver un mensaje de pendiente de asignacion del envio cuando no tiene un cadete asignado' do
     cuando_realizo_envio('chico', 'Cerrito 628', 'CP:1010', 141_733_544)
-    cuando_solicito_estado_de_envio_sin_asignar(8)
+    cuando_solicito_estado_de_envio_sin_asignar(8, 141_733_544)
     when_i_send_text('fake_token', '/estado-envio 8')
     then_i_get_text('fake_token', 'Tu envio \\(ID: 8\\) se encuentra pendiente de asignación')
 
@@ -279,7 +285,7 @@ describe 'BotClient' do
   it 'Deberia ver un mensaje de envio en proceso cuando el envio esta asignado' do
     cuando_realizo_envio('chico', 'Cerrito 628', 'CP:1010', 141_733_544)
     cuando_solicito_asignacion_de_envio(141_733_544)
-    cuando_solicito_estado_de_envio_asignado(8)
+    cuando_solicito_estado_de_envio_asignado(8, 141_733_544)
     when_i_send_text('fake_token', '/estado-envio 8')
     then_i_get_text('fake_token', 'Tu envio \\(ID: 8\\) fue asignado a Pedro, ya está en camino\\!')
 
