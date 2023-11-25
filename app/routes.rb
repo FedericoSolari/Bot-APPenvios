@@ -112,7 +112,9 @@ class Routes
             "\n"\
             '* Asignar cadete a envío:* /asignar\-envio' \
             "\n"\
-            '* Confirmar entrega de envío:* /confirmar\-entrega id\\_del\\_envio',
+            '* Confirmar retiro de envio:* /confirmar\\-retiro id\\_del\\_envio' \
+            "\n"\
+            '* Confirmar entrega de envío:* /confirmar\\-entrega id\\_del\\_envio',
       parse_mode: 'MarkdownV2'
     )
   end
