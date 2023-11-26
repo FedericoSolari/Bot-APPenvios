@@ -125,6 +125,13 @@ def cuando_confirmo_retiro_de_envio(id_envio)
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
+def cuando_consulto_historial_envios(id_cliente)
+  body = { "text": 'Envio: ID 8, Tamaño: chico, Dirección destino: Cerrito 628, Cadete asignado: - , Estado: pendiente de asignacion' }
+
+  stub_request(:get, "http://web:3000/clientes/#{id_cliente}")
+    .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
+end
+
 def then_i_get_text(token, message_text, id_chat = '141733544')
   body = { "ok": true,
            "result": { "message_id": 12,
@@ -326,11 +333,11 @@ describe 'BotClient' do
     app.run_once
   end
 
-  xit 'Deberia ver mi unico envio cuando consulto el historial de envios' do
+  it 'Deberia ver mi unico envio cuando consulto el historial de envios' do
     cuando_realizo_envio('chico', 'Cerrito 628', 'CP:1010', 141_733_544)
-    cuando_consulto_historial_envios
+    cuando_consulto_historial_envios(141_733_544)
     when_i_send_text('fake_token', '/historial')
-    then_i_get_text('fake_token', 'Envio: ID 8, Tamaño: chico, Dirección destino: Cerrito 628, Cadete asignado: - , Estado: pendiente de asignacion')
+    then_i_get_text('fake_token', 'Envio: ID 8, Tamaño: chico, Dirección destino: Cerrito 628, Cadete asignado: \\- , Estado: pendiente de asignacion')
     app = BotClient.new('fake_token')
 
     app.run_once

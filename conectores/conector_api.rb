@@ -105,6 +105,16 @@ class ConectorApi
     end
   end
 
+  def consultar_historial(id_cliente)
+    respuesta_http = Faraday.get("#{@api_url}/clientes/#{id_cliente}")
+    respuesta_parseada = parseador_respuesta(respuesta_http)
+    raise SolicitudNoExistosaError, respuesta_parseada['text'] unless solicitud_exitosa(respuesta_http)
+
+    respuesta_parseada
+  rescue Faraday::Error
+    raise ConexionApiError
+  end
+
   private
 
   def parseador_respuesta(respuesta_http)

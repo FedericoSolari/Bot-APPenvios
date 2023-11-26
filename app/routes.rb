@@ -88,6 +88,14 @@ class Routes
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   end
 
+  on_message '/historial' do |bot, message|
+    respuesta = ConectorApi.new.consultar_historial(message.chat.id)
+    formateador = FormateadorRespuesta.new(respuesta)
+    bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
+  rescue ConexionApiError => e
+    bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
+  end
+
   on_message '/stop' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: "Chau, #{message.from.username}", parse_mode: 'MarkdownV2')
   end
