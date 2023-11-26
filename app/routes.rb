@@ -6,6 +6,7 @@ require_relative '../excepciones/parametros_invalidos_error'
 require_relative '../excepciones/conexion_api_error'
 require_relative '../excepciones/solicitud_no_exitosa_error'
 require_relative '../ayudantes/formateador_respuesta'
+require_relative '../ayudantes/comandos_validos_respuesta'
 
 class Routes
   include Routing
@@ -98,23 +99,7 @@ class Routes
   default do |bot, message|
     bot.api.send_message(
       chat_id: message.chat.id,
-      text: 'El comando ingresado no existe' \
-            "\n"\
-            'Los comandos válidos son:' \
-            "\n"\
-            '* Registrar cliente:* /registrar\-nombre, direccion, codigo_postal' \
-            "\n"\
-            '* Registrar cadete:* /registrar\-cadete nombre, vehiculo' \
-            "\n"\
-            '* Nuevo envío:* /nuevo\-envio tamaño, direccion, codigo_postal' \
-            "\n"\
-            '* Consultar estado de envío:* /estado\-envio id\\_del\\_envio' \
-            "\n"\
-            '* Asignar cadete a envío:* /asignar\-envio' \
-            "\n"\
-            '* Confirmar retiro de envio:* /confirmar\\-retiro id\\_del\\_envio' \
-            "\n"\
-            '* Confirmar entrega de envío:* /confirmar\\-entrega id\\_del\\_envio',
+      text: AyudanteComandosDisponibles.new.obtener_comandos_validos,
       parse_mode: 'MarkdownV2'
     )
   end
