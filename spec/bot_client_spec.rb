@@ -325,5 +325,15 @@ describe 'BotClient' do
 
     app.run_once
   end
+
+  xit 'Deberia ver mi unico envio cuando consulto el historial de envios' do
+    cuando_realizo_envio('chico', 'Cerrito 628', 'CP:1010', 141_733_544)
+    cuando_consulto_historial_envios
+    when_i_send_text('fake_token', '/historial')
+    then_i_get_text('fake_token', 'Envio: ID 8, Tamaño: chico, Dirección destino: Cerrito 628, Cadete asignado: - , Estado: pendiente de asignacion')
+    app = BotClient.new('fake_token')
+
+    app.run_once
+  end
   # rubocop:enable RSpec/ExampleLength
 end
