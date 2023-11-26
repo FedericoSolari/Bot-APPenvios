@@ -19,8 +19,3 @@ class AyudanteComandosDisponibles
             '* Confirmar entrega de envío:* /confirmar\\-entrega id\\_del\\_envio'
   end
 end
-
-
-
-
-  
