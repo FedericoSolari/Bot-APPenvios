@@ -126,7 +126,7 @@ def cuando_confirmo_retiro_de_envio(id_envio)
 end
 
 def cuando_consulto_historial_envios(id_cliente)
-  body = { "text": 'Envio: ID 8, Tamaño: chico, Dirección destino: Cerrito 628, Cadete asignado: - , Estado: pendiente de asignacion' }
+  body = { "texts": [{ "text": 'Envio: ID 8, Tamaño: chico, Dirección destino: Cerrito 628, Cadete asignado: - , Estado: pendiente de asignacion' }] }
 
   stub_request(:get, "http://web:3000/clientes/#{id_cliente}")
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })

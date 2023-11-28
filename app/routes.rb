@@ -6,6 +6,7 @@ require_relative '../excepciones/parametros_invalidos_error'
 require_relative '../excepciones/conexion_api_error'
 require_relative '../excepciones/solicitud_no_exitosa_error'
 require_relative '../ayudantes/formateador_respuesta'
+require_relative '../ayudantes/formateador_historial'
 require_relative '../ayudantes/comandos_validos_respuesta'
 
 class Routes
@@ -90,8 +91,11 @@ class Routes
 
   on_message '/historial' do |bot, message|
     respuesta = ConectorApi.new.consultar_historial(message.chat.id)
-    formateador = FormateadorRespuesta.new(respuesta)
-    bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
+    formateador_historial = FormateadorHistorial.new(respuesta)
+    formateador_historial.textos.size.times do |posicion_registro|
+      registro_formateado = FormateadorRespuesta.new(formateador_historial.textos[posicion_registro])
+      bot.api.send_message(chat_id: message.chat.id, text: registro_formateado.texto, parse_mode: 'MarkdownV2')
+    end
   rescue ConexionApiError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   end
