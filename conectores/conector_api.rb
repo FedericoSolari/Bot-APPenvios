@@ -36,15 +36,18 @@ class ConectorApi
     end
   end
 
-  def realizar_envio(tamanio, direccion, codigo_postal, id_cliente)
-    parametros_invalidos = @validador.validar_envio(tamanio, direccion, codigo_postal)
+  def realizar_envio(tipo, tamanio, direccion, codigo_postal, id_cliente)
+    parametros_invalidos = @validador.validar_envio(tipo, tamanio, direccion, codigo_postal)
     raise ParametrosInvalidosError, 'Verifique que se hayan ingresado todos los parametros (tamaño, direccion, codigo postal)' if parametros_invalidos
 
     tamanio_invalido = @validador.validar_tamanio(tamanio)
     raise ParametrosInvalidosError, 'Tamaño indicado incorrecto, los tamaños validos son: Chico, Mediano o Grande' if tamanio_invalido
 
+    tamanio_invalido = @validador.validar_tipo_de_envio(tipo)
+    raise ParametrosInvalidosError, 'Tipo de envio indicado incorrecto, los tipos de envios validos son: Clasico y Express' if tamanio_invalido
+
     begin
-      cuerpo_solicitud = { tamanio:, direccion:, codigo_postal:, id_cliente: }.to_json
+      cuerpo_solicitud = { tipo:, tamanio:, direccion:, codigo_postal:, id_cliente: }.to_json
       respuesta_http = Faraday.post("#{@api_url}/envios", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
       parseador_respuesta(respuesta_http)
     rescue Faraday::Error

@@ -31,8 +31,8 @@ class Routes
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   end
 
-  on_message_pattern %r{/nuevo-envio (?<tamanio>.*), (?<direccion>.*), (?<codigo_postal>.*)} do |bot, message, args|
-    respuesta = ConectorApi.new.realizar_envio(args['tamanio'], args['direccion'], args['codigo_postal'], message.chat.id)
+  on_message_pattern %r{/nuevo-envio (?<tipo>.*), (?<tamanio>.*), (?<direccion>.*), (?<codigo_postal>.*)} do |bot, message, args|
+    respuesta = ConectorApi.new.realizar_envio(args['tipo'], args['tamanio'], args['direccion'], args['codigo_postal'], message.chat.id)
     formateador = FormateadorRespuesta.new(respuesta)
     bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
   rescue StandardError => e

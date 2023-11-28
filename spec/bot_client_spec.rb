@@ -257,7 +257,7 @@ describe 'BotClient' do
     app.run_once
   end
 
-  xit 'Deberia ver un mensaje de creacion de envio exitosa al crear un nuevo envio' do
+  it 'Deberia ver un mensaje de creacion de envio exitosa al crear un nuevo envio' do
     cuando_realizo_envio('clasico', 'chico', 'Cerrito 628', 'CP:1010', 141_733_544)
     when_i_send_text('fake_token', '/nuevo-envio clasico, chico, Cerrito 628, CP:1010')
     then_i_get_text('fake_token', 'Se registró tu envio con el ID: 8')
@@ -267,7 +267,7 @@ describe 'BotClient' do
     app.run_once
   end
 
-  xit 'Deberia ver un mensaje de creacion de envio exitosa al crear un nuevo envio de tipo express' do
+  it 'Deberia ver un mensaje de creacion de envio exitosa al crear un nuevo envio de tipo express' do
     cuando_realizo_envio('express', 'chico', 'Cerrito 628', 'CP:1010', 141_733_544)
     when_i_send_text('fake_token', '/nuevo-envio express, chico, Cerrito 628, CP:1010')
     then_i_get_text('fake_token', 'Se registró tu envio con el ID: 8')
@@ -287,7 +287,7 @@ describe 'BotClient' do
     app.run_once
   end
 
-  xit 'Deberia ver un mensaje de error intentar al crear un nuevo envio sin direccion' do
+  it 'Deberia ver un mensaje de error intentar al crear un nuevo envio sin direccion' do
     cuando_realizo_envio('clasico', 'chico', nil, 'CP:1010', 141_733_544)
     when_i_send_text('fake_token', '/nuevo-envio clasico, chico, , CP:1010')
     then_i_get_text('fake_token', 'Verifique que se hayan ingresado todos los parametros (tamaño, direccion, codigo postal)')
