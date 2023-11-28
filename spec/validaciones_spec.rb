@@ -42,27 +42,27 @@ describe 'Validaciones' do
   end
 
   describe 'envio' do
-    xit 'Debería devolver false al mandar clasico, chico, Av. Cerrito 630, CP: 1245' do
+    it 'Debería devolver false al mandar clasico, chico, Av. Cerrito 630, CP: 1245' do
       respuesta = ValidadorEntrada.new.validar_tamanio('chico')
       expect(respuesta).to eq false
     end
 
-    xit 'Debería devolver false al mandar clasico, mediano, Av. Cerrito 630, CP: 1245' do
+    it 'Debería devolver false al mandar clasico, mediano, Av. Cerrito 630, CP: 1245' do
       respuesta = ValidadorEntrada.new.validar_tamanio('mediano')
       expect(respuesta).to eq false
     end
 
-    xit 'Debería devolver false al mandar clasico, grande, Av. Cerrito 630, CP: 1245' do
+    it 'Debería devolver false al mandar clasico, grande, Av. Cerrito 630, CP: 1245' do
       respuesta = ValidadorEntrada.new.validar_tamanio('grande')
       expect(respuesta).to eq false
     end
 
-    xit 'Debería devolver true al mandar clasico, enorme, Av. Cerrito 630, CP: 1245' do
+    it 'Debería devolver true al mandar clasico, enorme, Av. Cerrito 630, CP: 1245' do
       respuesta = ValidadorEntrada.new.validar_tamanio('enorme')
       expect(respuesta).to eq true
     end
 
-    xit 'Debería devolver true al mandar clasico, chico, Av. Cerrito 630' do
+    it 'Debería devolver true al mandar clasico, chico, Av. Cerrito 630' do
       respuesta = ValidadorEntrada.new.validar_envio('clasico', 'chico', 'Av. Cerrito 630', nil)
       expect(respuesta).to eq true
     end
