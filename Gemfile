@@ -5,6 +5,7 @@ ruby '3.1.2'
 # Project requirements
 gem 'rake'
 
+gem 'activemodel', require: 'active_model'
 gem 'dotenv'
 gem 'faraday'
 gem 'semantic_logger'
