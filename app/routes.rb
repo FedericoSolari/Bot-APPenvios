@@ -5,7 +5,6 @@ require_relative '../conectores/conector_api'
 require_relative '../excepciones/parametros_invalidos_error'
 require_relative '../excepciones/conexion_api_error'
 require_relative '../excepciones/solicitud_no_exitosa_error'
-require_relative '../excepciones/respuesta_historial_error'
 require_relative '../ayudantes/formateador_respuesta'
 require_relative '../ayudantes/formateador_historial'
 require_relative '../ayudantes/comandos_validos_respuesta'
@@ -21,9 +20,7 @@ class Routes
     respuesta = ConectorApi.new.registrar_cliente(args['nombre'], args['direccion'], args['codigo_postal'], message.chat.id)
     formateador = FormateadorRespuesta.new(respuesta)
     bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
-  rescue ConexionApiError => e
-    bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
-  rescue ParametrosInvalidosError => e
+  rescue StandardError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   end
 
@@ -31,9 +28,7 @@ class Routes
     respuesta = ConectorApi.new.registrar_cadete(args['nombre'], args['vehiculo'], message.chat.id)
     formateador = FormateadorRespuesta.new(respuesta)
     bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
-  rescue ConexionApiError => e
-    bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
-  rescue ParametrosInvalidosError => e
+  rescue StandardError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   end
 
@@ -41,9 +36,7 @@ class Routes
     respuesta = ConectorApi.new.realizar_envio(args['tamanio'], args['direccion'], args['codigo_postal'], message.chat.id)
     formateador = FormateadorRespuesta.new(respuesta)
     bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
-  rescue ConexionApiError => e
-    bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
-  rescue ParametrosInvalidosError => e
+  rescue StandardError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   end
 
@@ -51,9 +44,7 @@ class Routes
     respuesta = ConectorApi.new.estado_envio(args['id_envio'].to_i, message.chat.id)
     formateador = FormateadorRespuesta.new(respuesta)
     bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
-  rescue ConexionApiError => e
-    bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
-  rescue ParametrosInvalidosError => e
+  rescue StandardError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   end
 
@@ -61,7 +52,7 @@ class Routes
     respuesta = ConectorApi.new.asignar_envio(message.chat.id)
     formateador = FormateadorRespuesta.new(respuesta)
     bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
-  rescue ConexionApiError => e
+  rescue StandardError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   end
 
@@ -70,11 +61,7 @@ class Routes
     formateador = FormateadorRespuesta.new(respuesta)
     bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
     bot.api.send_message(chat_id: formateador.cliente_id, text: formateador.texto_cliente, parse_mode: 'MarkdownV2')
-  rescue SolicitudNoExistosaError => e
-    bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
-  rescue ConexionApiError => e
-    bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
-  rescue ParametrosInvalidosError => e
+  rescue StandardError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   end
 
@@ -82,26 +69,20 @@ class Routes
     respuesta = ConectorApi.new.confirmar_retiro(args['id_envio'].to_i)
     formateador = FormateadorRespuesta.new(respuesta)
     bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
-  rescue SolicitudNoExistosaError => e
-    bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
-  rescue ConexionApiError => e
-    bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
-  rescue ParametrosInvalidosError => e
+  rescue StandardError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
   end
 
   on_message '/historial' do |bot, message|
     respuesta = ConectorApi.new.consultar_historial(message.chat.id)
     formateador_historial = FormateadorHistorial.new(respuesta)
+    bot.api.send_message(chat_id: message.chat.id, text: 'Aquí tienes tus últimos envios realizados:', parse_mode: 'MarkdownV2')
     formateador_historial.textos.size.times do |posicion_registro|
       registro_formateado = FormateadorRespuesta.new(formateador_historial.textos[posicion_registro])
       bot.api.send_message(chat_id: message.chat.id, text: registro_formateado.texto, parse_mode: 'MarkdownV2')
     end
-  rescue ConexionApiError => e
+  rescue StandardError => e
     bot.api.send_message(chat_id: message.chat.id, text: e.message, parse_mode: 'MarkdownV2')
-  rescue RespuestaHistorialError
-    formateador = FormateadorRespuesta.new(respuesta)
-    bot.api.send_message(chat_id: message.chat.id, text: formateador.texto, parse_mode: 'MarkdownV2')
   end
 
   on_message '/stop' do |bot, message|

@@ -1,2 +1,0 @@
-class RespuestaHistorialError < StandardError
-end
