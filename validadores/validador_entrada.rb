@@ -31,4 +31,8 @@ class ValidadorEntrada
   def validar_id_envio(id_envio)
     id_envio.nil? || id_envio.negative?
   end
+
+  def validar_tipo_de_envio(tipo)
+    !%w[clasico].include?(tipo.downcase)
+  end
 end
