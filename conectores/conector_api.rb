@@ -81,7 +81,7 @@ class ConectorApi
       cuerpo_solicitud = { estado: 'entregado' }.to_json
       respuesta_http = Faraday.put("#{@api_url}/envios/#{id_envio}", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
       respuesta_parseada = parseador_respuesta(respuesta_http)
-      raise SolicitudNoExitosaError, respuesta_parseada['text'] unless solicitud_exitosa(respuesta_http)
+      raise SolicitudNoExitosaError, respuesta_parseada['text'].gsub(/\./, '\.') unless solicitud_exitosa(respuesta_http)
 
       respuesta_parseada
     rescue Faraday::Error
@@ -97,7 +97,7 @@ class ConectorApi
       cuerpo_solicitud = { estado: 'en camino' }.to_json
       respuesta_http = Faraday.put("#{@api_url}/envios/#{id_envio}", cuerpo_solicitud, { 'Content-Type' => 'application/json' })
       respuesta_parseada = parseador_respuesta(respuesta_http)
-      raise SolicitudNoExitosaError, respuesta_parseada['text'] unless solicitud_exitosa(respuesta_http)
+      raise SolicitudNoExitosaError, respuesta_parseada['text'].gsub(/\./, '\.') unless solicitud_exitosa(respuesta_http)
 
       respuesta_parseada
     rescue Faraday::Error
@@ -108,7 +108,7 @@ class ConectorApi
   def consultar_historial(id_cliente)
     respuesta_http = Faraday.get("#{@api_url}/clientes/#{id_cliente}")
     respuesta_parseada = parseador_respuesta(respuesta_http)
-    raise SolicitudNoExitosaError, respuesta_parseada['text'] unless solicitud_exitosa(respuesta_http)
+    raise SolicitudNoExitosaError, respuesta_parseada['text'].gsub(/\./, '\.') unless solicitud_exitosa(respuesta_http)
 
     respuesta_parseada
   rescue Faraday::Error

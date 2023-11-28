@@ -1,6 +1,5 @@
 require "#{File.dirname(__FILE__)}/../lib/routing"
 require "#{File.dirname(__FILE__)}/../lib/version"
-require "#{File.dirname(__FILE__)}/tv/series"
 require_relative '../conectores/conector_api'
 require_relative '../excepciones/parametros_invalidos_error'
 require_relative '../excepciones/conexion_api_error'
