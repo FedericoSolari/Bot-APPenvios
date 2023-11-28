@@ -33,6 +33,6 @@ class ValidadorEntrada
   end
 
   def validar_tipo_de_envio(tipo)
-    !%w[clasico].include?(tipo.downcase)
+    !%w[clasico express].include?(tipo.downcase)
   end
 end

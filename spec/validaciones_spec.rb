@@ -72,9 +72,9 @@ describe 'Validaciones' do
       expect(respuesta).to eq false
     end
 
-    xit 'Debería devolver true al crear un envio express' do
+    it 'Debería devolver true al crear un envio express' do
       respuesta = ValidadorEntrada.new.validar_tipo_de_envio('express')
-      expect(respuesta).to eq true
+      expect(respuesta).to eq false
     end
 
     it 'Debería devolver true al mandar CP: 1245' do
