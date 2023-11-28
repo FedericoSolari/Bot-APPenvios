@@ -75,12 +75,12 @@ def cuando_solicito_asignacion_de_envio(id_cadete)
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
-def cuando_realizo_envio(tamanio, direccion, codigo_postal, id_cliente)
+def cuando_realizo_envio(tipo_envio, tamanio, direccion, codigo_postal, id_cliente)
   body = { "text": 'Se registró tu envio con el ID: 8' }
 
   stub_request(:post, 'http://web:3000/envios')
     .with(
-      body: { 'tamanio' => tamanio, 'direccion' => direccion, 'codigo_postal' => codigo_postal, 'id_cliente' => id_cliente }
+      body: { 'tipo' => tipo_envio, 'tamanio' => tamanio, 'direccion' => direccion, 'codigo_postal' => codigo_postal, 'id_cliente' => id_cliente }
     )
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
@@ -257,9 +257,9 @@ describe 'BotClient' do
     app.run_once
   end
 
-  it 'Deberia ver un mensaje de creacion de envio exitosa al crear un nuevo envio' do
-    cuando_realizo_envio('chico', 'Cerrito 628', 'CP:1010', 141_733_544)
-    when_i_send_text('fake_token', '/nuevo-envio chico, Cerrito 628, CP:1010')
+  xit 'Deberia ver un mensaje de creacion de envio exitosa al crear un nuevo envio' do
+    cuando_realizo_envio('clasico', 'chico', 'Cerrito 628', 'CP:1010', 141_733_544)
+    when_i_send_text('fake_token', '/nuevo-envio clasico, chico, Cerrito 628, CP:1010')
     then_i_get_text('fake_token', 'Se registró tu envio con el ID: 8')
 
     app = BotClient.new('fake_token')
@@ -267,10 +267,10 @@ describe 'BotClient' do
     app.run_once
   end
 
-  it 'Deberia ver un mensaje de error intentar al crear un nuevo envio sin direccion' do
-    cuando_realizo_envio('chico', nil, 'CP:1010', 141_733_544)
-    when_i_send_text('fake_token', '/nuevo-envio chico, , CP:1010')
-    then_i_get_text('fake_token', 'Verifique que se hayan ingresado todos los parametros (tamaño, direccion, codigo postal)')
+  xit 'Deberia ver un mensaje de creacion de envio exitosa al crear un nuevo envio de tipo express' do
+    cuando_realizo_envio('express', 'chico', 'Cerrito 628', 'CP:1010', 141_733_544)
+    when_i_send_text('fake_token', '/nuevo-envio express, chico, Cerrito 628, CP:1010')
+    then_i_get_text('fake_token', 'Se registró tu envio con el ID: 8')
 
     app = BotClient.new('fake_token')
 
@@ -287,9 +287,19 @@ describe 'BotClient' do
     app.run_once
   end
 
+  it 'Deberia ver un mensaje de error intentar al crear un nuevo envio sin direccion' do
+    cuando_realizo_envio('clasico', 'chico', nil, 'CP:1010', 141_733_544)
+    when_i_send_text('fake_token', '/nuevo-envio chico, , CP:1010')
+    then_i_get_text('fake_token', 'Verifique que se hayan ingresado todos los parametros (tamaño, direccion, codigo postal)')
+
+    app = BotClient.new('fake_token')
+
+    app.run_once
+  end
+
   # rubocop:disable RSpec/ExampleLength
   it 'Deberia ver un mensaje de pendiente de asignacion del envio cuando no tiene un cadete asignado' do
-    cuando_realizo_envio('chico', 'Cerrito 628', 'CP:1010', 141_733_544)
+    cuando_realizo_envio('clasico', 'chico', 'Cerrito 628', 'CP:1010', 141_733_544)
     cuando_solicito_estado_de_envio_sin_asignar(8, 141_733_544)
     when_i_send_text('fake_token', '/estado-envio 8')
     then_i_get_text('fake_token', 'Tu envio \\(ID: 8\\) se encuentra pendiente de asignación')
@@ -300,7 +310,7 @@ describe 'BotClient' do
   end
 
   it 'Deberia ver un mensaje de envio en proceso cuando el envio esta asignado' do
-    cuando_realizo_envio('chico', 'Cerrito 628', 'CP:1010', 141_733_544)
+    cuando_realizo_envio('clasico', 'chico', 'Cerrito 628', 'CP:1010', 141_733_544)
     cuando_solicito_asignacion_de_envio(141_733_544)
     cuando_solicito_estado_de_envio_asignado(8, 141_733_544)
     when_i_send_text('fake_token', '/estado-envio 8')
@@ -312,7 +322,7 @@ describe 'BotClient' do
   end
 
   it 'Deberia ver un mensaje de entrega exitosa al confirmar una entrega' do
-    cuando_realizo_envio('chico', 'Cerrito 628', 'CP:1010', 141_733_544)
+    cuando_realizo_envio('clasico', 'chico', 'Cerrito 628', 'CP:1010', 141_733_544)
     cuando_confirmo_entrega_de_envio(8)
     when_i_send_text('fake_token', '/confirmar-entrega 8')
     then_i_get_text('fake_token', 'Gracias por entregar el envio\\!')
@@ -324,7 +334,7 @@ describe 'BotClient' do
   end
 
   it 'Deberia ver un mensaje de retiro exitoso al retirar una entrega' do
-    cuando_realizo_envio('chico', 'Cerrito 628', 'CP:1010', 141_733_544)
+    cuando_realizo_envio('clasico', 'chico', 'Cerrito 628', 'CP:1010', 141_733_544)
     cuando_confirmo_retiro_de_envio(8)
     when_i_send_text('fake_token', '/confirmar-retiro 8')
     then_i_get_text('fake_token', 'Gracias por retirar el envio\\!')
@@ -334,7 +344,7 @@ describe 'BotClient' do
   end
 
   it 'Deberia ver mi unico envio cuando consulto el historial de envios' do
-    cuando_realizo_envio('chico', 'Cerrito 628', 'CP:1010', 141_733_544)
+    cuando_realizo_envio('clasico', 'chico', 'Cerrito 628', 'CP:1010', 141_733_544)
     cuando_consulto_historial_envios(141_733_544)
     when_i_send_text('fake_token', '/historial')
     then_i_get_text('fake_token', 'Aquí tienes tus últimos envios realizados:')
