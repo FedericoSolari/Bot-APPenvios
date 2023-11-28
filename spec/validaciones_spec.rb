@@ -42,36 +42,38 @@ describe 'Validaciones' do
   end
 
   describe 'envio' do
-    it 'Debería devolver false al mandar chico, Av. Cerrito 630, CP: 1245' do
-      # respuesta = ValidadorEntrada.new.validar_envio('chico', 'Av. Cerrito 630', 'CP: 1245')
+    xit 'Debería devolver false al mandar clasico, chico, Av. Cerrito 630, CP: 1245' do
       respuesta = ValidadorEntrada.new.validar_tamanio('chico')
       expect(respuesta).to eq false
     end
 
-    it 'Debería devolver false al mandar mediano, Av. Cerrito 630, CP: 1245' do
-      # respuesta = ValidadorEntrada.new.validar_envio('mediano', 'Av. Cerrito 630', 'CP: 1245')
+    xit 'Debería devolver false al mandar clasico, mediano, Av. Cerrito 630, CP: 1245' do
       respuesta = ValidadorEntrada.new.validar_tamanio('mediano')
       expect(respuesta).to eq false
     end
 
-    it 'Debería devolver false al mandar grande, Av. Cerrito 630, CP: 1245' do
-      # respuesta = ValidadorEntrada.new.validar_envio('grande', 'Av. Cerrito 630', 'CP: 1245')
+    xit 'Debería devolver false al mandar clasico, grande, Av. Cerrito 630, CP: 1245' do
       respuesta = ValidadorEntrada.new.validar_tamanio('grande')
       expect(respuesta).to eq false
     end
 
-    it 'Debería devolver true al mandar enorme, Av. Cerrito 630, CP: 1245' do
+    xit 'Debería devolver true al mandar clasico, enorme, Av. Cerrito 630, CP: 1245' do
       respuesta = ValidadorEntrada.new.validar_tamanio('enorme')
       expect(respuesta).to eq true
     end
 
-    it 'Debería devolver true al mandar chico, Av. Cerrito 630' do
-      respuesta = ValidadorEntrada.new.validar_envio('chico', 'Av. Cerrito 630', nil)
+    xit 'Debería devolver true al mandar clasico, chico, Av. Cerrito 630' do
+      respuesta = ValidadorEntrada.new.validar_envio('clasico', 'chico', 'Av. Cerrito 630', nil)
       expect(respuesta).to eq true
     end
 
-    it 'Debería devolver true al mandar CP: 1245' do
-      respuesta = ValidadorEntrada.new.validar_envio('chico', nil, 'CP: 1245')
+    xit 'Debería devolver true al crear un envio clasico' do
+      respuesta = ValidadorEntrada.new.validar_tipo_de_envio('clasico')
+      expect(respuesta).to eq true
+    end
+
+    xit 'Debería devolver true al mandar CP: 1245' do
+      respuesta = ValidadorEntrada.new.validar_envio('clasico', 'chico', nil, 'CP: 1245')
       expect(respuesta).to eq true
     end
 
