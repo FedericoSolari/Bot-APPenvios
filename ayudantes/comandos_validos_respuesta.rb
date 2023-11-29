@@ -4,11 +4,11 @@ class AyudanteComandosDisponibles
             "\n"\
             'Los comandos válidos son:' \
             "\n"\
-            '* Registrar cliente:* /registrar\\-nombre, direccion, codigo\\_postal' \
+            '* Registrar cliente:* /registrar\\ nombre, direccion, codigo\\_postal' \
             "\n"\
             '* Registrar cadete:* /registrar\\-cadete nombre, vehiculo' \
             "\n"\
-            '* Nuevo envío:* /nuevo\-envio tamaño, direccion, codigo\\_postal' \
+            '* Nuevo envío:* /nuevo\-envio tipo, tamaño, direccion, codigo\\_postal' \
             "\n"\
             '* Consultar estado de envío:* /estado\\-envio id\\_del\\_envio' \
             "\n"\
@@ -16,6 +16,8 @@ class AyudanteComandosDisponibles
             "\n"\
             '* Confirmar retiro de envio:* /confirmar\\-retiro id\\_del\\_envio' \
             "\n"\
-            '* Confirmar entrega de envío:* /confirmar\\-entrega id\\_del\\_envio'
+            '* Confirmar entrega de envío:* /confirmar\\-entrega id\\_del\\_envio'\
+            "\n"\
+            '* Obtener historial de envíos:* /historial'
   end
 end
